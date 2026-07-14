@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Playerok Mini</title>
+  
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== CSS VARIABLES (как у Playerok) ===== */
+    :root {
+      --bg: #14161A;
+      --bg-secondary: #282933;
+      --bg-tertiary: #404452;
+      --bg-card: #1E1F26;
+      --bg-hover: #2A2B36;
+      --text: #EBECF0;
+      --text-secondary: #A4A8B2;
+      --text-placeholder: #707480;
+      --brand: #2663F0;
+      --brand-hover: #5286FF;
+      --brand-gradient: linear-gradient(135deg, #2663F0, #00D4FF);
+      --green: #10A350;
+      --green-light: #22BD65;
+      --red: #F0305D;
+      --red-light: #FF4D76;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --transition: 0.25s ease;
+    }
+    .light {
+      --bg: #FFFFFF;
+      --bg-secondary: #F2F4F7;
+      --bg-tertiary: #E1E3E8;
+      --bg-card: #FFFFFF;
+      --bg-hover: #F0F2F5;
+      --text: #000000;
+      --text-secondary: #828794;
+      --text-placeholder: #A4A8B2;
+      --shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--brand); border-radius: 4px; }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo {
+      font-weight: 700;
+      font-size: 20px;
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    }
+    .header-search {
+      flex: 1;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-placeholder);
+      transition: background var(--transition);
+    }
+    .header-search:active { background: var(--bg-tertiary); }
+    .header-search svg { width: 18px; height: 18px; fill: var(--text-placeholder); flex-shrink: 0; }
+    .header-theme {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+    .header-theme:active { background: var(--bg-tertiary); }
+
+    /* ===== SWIPER BANNER ===== */
+    .banner-swiper {
+      margin: 12px 16px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .banner-swiper .swiper-slide {
+      aspect-ratio: 16/9;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--text-secondary);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .banner-swiper .swiper-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(20,22,26,0.6) 0%, transparent 60%);
+    }
+    .banner-swiper .swiper-slide span {
+      position: relative;
+      z-index: 1;
+      padding: 16px 24px;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius);
+      font-size: clamp(14px, 4vw, 28px);
+      text-align: center;
+      color: #fff;
+    }
+    .banner-swiper .swiper-pagination-bullet {
+      background: rgba(255,255,255,0.4);
+      opacity: 1;
+    }
+    .banner-swiper .swiper-pagination-bullet-active {
+      background: #fff;
+    }
+
+    /* ===== QUICK LINKS ===== */
+    .quick-links {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 12px;
+    }
+    .quick-links::-webkit-scrollbar { display: none; }
+    .quick-link {
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .quick-link:active { background: var(--brand); color: #fff; }
+    .quick-link img, .quick-link svg {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ===== CATEGORIES ===== */
+    .categories {
+      display: flex;
+      gap: 6px;
+      padding: 0 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--bg-secondary);
+      padding-bottom: 12px;
+    }
+    .categories::-webkit-scrollbar { display: none; }
+    .category {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all var(--transition);
+      white-space: nowrap;
+      position: relative;
+    }
+    .category.active {
+      color: var(--brand);
+      background: rgba(38, 99, 240, 0.12);
+    }
+    .category:active { transform: scale(0.95); }
+
+    /* ===== PRODUCT GRID ===== */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 16px;
+    }
+    @media (min-width: 420px) {
+      .products { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 640px) {
+      .products { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+      border: 1px solid var(--bg-secondary);
+    }
+    .product-card:active { transform: scale(0.97); }
+    .product-image {
+      aspect-ratio: 4/3;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-placeholder);
+      position: relative;
+      overflow: hidden;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .product-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--brand);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .product-badge.green { background: var(--green); }
+    .product-badge.red { background: var(--red); }
+    .product-info {
+      padding: 10px 12px 12px;
+    }
+    .product-title {
+      font-size: 13px;
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .product-price .old {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-placeholder);
+      text-decoration: line-through;
+    }
+    .product-price .discount {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--red);
+      padding: 0 6px;
+      border-radius: 4px;
+    }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .product-rating .stars {
+      display: flex;
+      gap: 1px;
+      color: #FFB800;
+      font-size: 13px;
+    }
+    .product-seller {
+      font-size: 11px;
+      color: var(--text-placeholder);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .product-seller .verified {
+      color: var(--brand);
+      font-size: 14px;
+    }
+
+    /* ===== SHOW MORE ===== */
+    .show-more {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 20px auto 0;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 15px;
+      transition: background var(--transition);
+      text-align: center;
+    }
+    .show-more:active { background: var(--bg-tertiary); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-top: 40px;
+      padding: 24px 16px 80px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--bg-tertiary);
+    }
+    .footer-section {
+      margin-bottom: 20px;
+    }
+    .footer-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-placeholder);
+      transition: color var(--transition);
+    }
+    .footer-links a:active { color: var(--brand); }
+    .footer-payments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .footer-payments img, .footer-payments svg {
+      height: 28px;
+      width: auto;
+      border-radius: 6px;
+      background: var(--bg);
+      padding: 2px 6px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: background var(--transition);
+    }
+    .footer-social a:active { background: var(--bg-tertiary); }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-placeholder);
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* ===== TELEGRAM BOTTOM BUTTON ===== */
+    .tg-btn {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 50;
+      background: var(--brand-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(38, 99, 240, 0.4);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .tg-btn:active { transform: scale(0.97); box-shadow: 0 2px 12px rgba(38, 99, 240, 0.3); }
+
+    /* ===== UTILITY ===== */
+    .hidden { display: none !important; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-logo">Playerok</div>
+    <div class="header-search" id="searchBtn">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>Поиск игр</span>
+    </div>
+    <button class="header-theme" id="themeToggle" aria-label="Переключить тему">
+      🌙
+    </button>
+  </header>
+
+  <!-- ===== BANNER SWIPER ===== -->
+  <div class="banner-swiper swiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" style="background-image: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);">
+        <span>🔥 Brawl Stars — Скидки до 50%</span>
+      </div>
+      <div class="swiper-slide" style="background-image: linear-gradient(135deg, #0f0c29, #302b63, #24243e);">
+        <span>🎮 Пополни Steam с кэшбэком 5%</span>
+      </div>
+      <div class="swiper-slide" style="background-image: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);">
+        <span>💎 Roblox — Лучшие цены на Robux</span>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+
+  <!-- ===== QUICK LINKS ===== -->
+  <div class="quick-links">
+    <button class="quick-link">🎮 Steam</button>
+    <button class="quick-link">💬 Telegram</button>
+    <button class="quick-link">🎮 PSN</button>
+    <button class="quick-link">📱 Roblox</button>
+    <button class="quick-link">🔫 PUBG</button>
+  </div>
+
+  <!-- ===== CATEGORIES ===== -->
+  <div class="categories">
+    <button class="category active">🔥 Популярное</button>
+    <button class="category">🎁 Донат</button>
+    <button class="category">📦 Подписки</button>
+    <button class="category">👤 Аккаунты</button>
+    <button class="category">💎 Валюты</button>
+    <button class="category">🔑 Ключи</button>
+  </div>
+
+  <!-- ===== PRODUCTS ===== -->
+  <div class="products" id="productGrid">
+    <!-- Карточки будут добавлены через JS -->
+  </div>
+
+  <button class="show-more" id="showMore">Показать еще</button>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-section">
+      <div class="footer-title">Способы оплаты</div>
+      <div class="footer-payments">
+        <span>💳</span>
+        <span>📱</span>
+        <span>🏦</span>
+        <span>💶</span>
+        <span>₿</span>
+      </div>
+    </div>
+    <div class="footer-section">
+      <div class="footer-title">Информация</div>
+      <div class="footer-links">
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+        <a href="#">Условия</a>
+        <a href="#">Контакты</a>
+      </div>
+    </div>
+    <div class="footer-section">
+      <div class="footer-title">Соцсети</div>
+      <div class="footer-social">
+        <a href="#">📱</a>
+        <a href="#">📘</a>
+        <a href="#">🎬</a>
+        <a href="#">🎵</a>
+      </div>
+    </div>
+    <div class="footer-copy">2026 © Playerok — маркетплейс игровых товаров</div>
+  </footer>
+
+  <!-- ===== TELEGRAM BOTTOM BUTTON ===== -->
+  <button class="tg-btn" id="tgBtn">🚀 Открыть в Telegram</button>
+
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    (function() {
+      'use strict';
+
+      // ============================================================
+      // 1. ТЕМА (как у Playerok)
+      // ============================================================
+      const html = document.documentElement;
+      const themeBtn = document.getElementById('themeToggle');
+
+      // Определяем тему Telegram, если есть
+      let tgTheme = 'dark';
+      if (window.Telegram && window.Telegram.WebApp) {
+        tgTheme = window.Telegram.WebApp.colorScheme || 'dark';
+        // Telegram сам подскажет тему
+      }
+
+      // Сохраняем предпочтения пользователя
+      let currentTheme = localStorage.getItem('playerok-theme') || tgTheme;
+
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          html.classList.add('light');
+          themeBtn.textContent = '☀️';
+        } else {
+          html.classList.remove('light');
+          themeBtn.textContent = '🌙';
+        }
+        currentTheme = theme;
+        localStorage.setItem('playerok-theme', theme);
+        // Сообщаем Telegram
+        if (window.Telegram && window.Telegram.WebApp) {
+          try {
+            Telegram.WebApp.setHeaderColor?.(theme === 'light' ? '#ffffff' : '#14161A');
+            Telegram.WebApp.setBackgroundColor?.(theme === 'light' ? '#ffffff' : '#14161A');
+          } catch (_) {}
+        }
+      }
+
+      applyTheme(currentTheme);
+
+      themeBtn.addEventListener('click', () => {
+        applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+      });
+
+      // Подписываемся на смену темы в Telegram
+      if (window.Telegram && window.Telegram.WebApp) {
+        try {
+          Telegram.WebApp.onEvent('themeChanged', () => {
+            const newTgTheme = Telegram.WebApp.colorScheme || 'dark';
+            // Меняем только если пользователь не переопределил вручную
+            if (!localStorage.getItem('playerok-theme')) {
+              applyTheme(newTgTheme);
+            }
+          });
+        } catch (_) {}
+      }
+
+      // ============================================================
+      // 2. SWIPER БАННЕР
+      // ============================================================
+      new Swiper('.banner-swiper', {
+        loop: true,
+        autoplay: { delay: 3500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination' },
+        grabCursor: true,
+      });
+
+      // ============================================================
+      // 3. ТОВАРЫ (локальные данные)
+      // ============================================================
+      const products = [
+        { id: 1, title: '1500 ROBUX | ЛУЧШАЯ ЦЕНА', price: 1299, oldPrice: 2499, discount: '-48%', rating: 5, reviews: 7176, seller: 'Playerok', verified: true, image: '🎮' },
+        { id: 2, title: 'СБОР ДИКОВИНОК 168 ШТ', price: 90, oldPrice: 200, discount: '-55%', rating: 5, reviews: 9, seller: 'GenshinPro', verified: false, image: '🌺' },
+        { id: 3, title: 'FL Studio Producer Edition 25', price: 249, oldPrice: 499, discount: '-50%', rating: 5, reviews: 3158, seller: 'AudioKey', verified: true, image: '🎵' },
+        { id: 4, title: '4000 + 400 Баксов по ID', price: 5299, oldPrice: 9999, discount: '-47%', rating: 5, reviews: 5688, seller: 'EchoPro', verified: false, image: '🔮' },
+        { id: 5, title: '10$ подарочная карта (США)', price: 879, oldPrice: 1190, discount: '-26%', rating: 5, reviews: 124, seller: 'Playerok', verified: true, image: '🎁' },
+        { id: 6, title: 'Pax Historia / Пополнение на 8$', price: 1290, oldPrice: 1499, discount: '-14%', rating: 5, reviews: 1357, seller: 'PaxShop', verified: false, image: '📅' },
+        { id: 7, title: '💎950 ГЕМОВ | 2 МИНУТЫ', price: 4999, oldPrice: null, discount: null, rating: 5, reviews: 87368, seller: 'BrawlKing', verified: true, image: '💎' },
+        { id: 8, title: '250 TRY подарочная карта', price: 509, oldPrice: 620, discount: '-18%', rating: 5, reviews: 356, seller: 'Playerok', verified: true, image: '🎮' },
+        { id: 9, title: 'АЛМАЗНЫЙ ПРОПУСК PASS', price: 1199, oldPrice: 1799, discount: '-33%', rating: 5, reviews: 104000, seller: 'ClashShop', verified: false, image: '⚔️' },
+        { id: 10, title: 'Total War: MEDIEVAL II', price: 799, oldPrice: 999, discount: '-20%', rating: 5, reviews: 1312, seller: 'KeyMaster', verified: true, image: '🗡️' },
+      ];
+
+      let visibleCount = 6;
+
+      function renderProducts(count) {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '';
+        const items = products.slice(0, count);
+        items.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+
+          const stars = '⭐'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
+
+          card.innerHTML = `
+            <div class="product-image">
+              <span style="font-size:48px;">${p.image}</span>
+              ${p.discount ? `<span class="product-badge ${p.discount.includes('55') || p.discount.includes('50') ? 'red' : 'green'}">${p.discount}</span>` : ''}
+            </div>
+            <div class="product-info">
+              <div class="product-title">${p.title}</div>
+              <div class="product-price">
+                ${p.price} ₽
+                ${p.oldPrice ? `<span class="old">${p.oldPrice} ₽</span>` : ''}
+                ${p.discount ? `<span class="discount">${p.discount}</span>` : ''}
+              </div>
+              <div class="product-rating">
+                <span class="stars">${stars}</span>
+                <span>${p.reviews.toLocaleString()}</span>
+              </div>
+              <div class="product-seller">
+                ${p.verified ? '<span class="verified">✅</span>' : ''}
+                ${p.seller}
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+        document.getElementById('showMore').textContent = count >= products.length ? 'Показать меньше' : 'Показать еще';
+      }
+
+      renderProducts(visibleCount);
+
+      document.getElementById('showMore').addEventListener('click', function() {
+        if (visibleCount >= products.length) {
+          visibleCount = 4;
+        } else {
+          visibleCount += 4;
+          if (visibleCount > products.length) visibleCount = products.length;
+        }
+        renderProducts(visibleCount);
+      });
+
+      // ============================================================
+      // 4. КАТЕГОРИИ (переключение)
+      // ============================================================
+      document.querySelectorAll('.category').forEach(cat => {
+        cat.addEventListener('click', function() {
+          document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // ============================================================
+      // 5. TELEGRAM WEBAPP ИНТЕГРАЦИЯ
+      // ============================================================
+      const tgBtn = document.getElementById('tgBtn');
+
+      // Проверяем, запущено ли внутри Telegram
+      const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
+
+      if (isTelegram) {
+        // Скрываем кнопку, т.к. мы уже внутри
+        tgBtn.classList.add('hidden');
+        // Адаптируем хедер под Telegram
+        try {
+          Telegram.WebApp.expand();
+          Telegram.WebApp.setHeaderColor(currentTheme === 'light' ? '#ffffff' : '#14161A');
+          Telegram.WebApp.setBackgroundColor(currentTheme === 'light' ? '#ffffff' : '#14161A');
+        } catch (_) {}
+      } else {
+        // Если не в Telegram — кнопка открывает бота
+        tgBtn.textContent = '📱 Открыть в Telegram';
+        tgBtn.addEventListener('click', function() {
+          // Замени playerok_bot на своего бота
+          window.open('https://t.me/playerok_bot', '_blank');
+        });
+      }
+
+      // ============================================================
+      // 6. ПОИСК (визуальный фидбек)
+      // ============================================================
+      document.getElementById('searchBtn').addEventListener('click', function() {
+        const query = prompt('🔍 Введите запрос для поиска:');
+        if (query && query.trim()) {
+          alert(`🔎 Поиск "${query.trim()}" (демо-режим)`);
+        }
+      });
+
+      console.log('✅ Playerok Mini App готов!');
+      console.log(`🌓 Тема: ${currentTheme}`);
+      console.log(`📱 В Telegram: ${isTelegram}`);
+
+    })();
+  </script>
+
+</body>
+</html>
