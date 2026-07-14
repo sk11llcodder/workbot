@@ -1,193 +1,824 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Playerok Mini</title>
+  <title>Playerok — маркетплейс игровых товаров</title>
+  
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #14161A;
       color: #EBECF0;
-      padding: 16px;
-      padding-bottom: 80px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      max-width: 600px;
-      margin: 0 auto;
+    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+    a { color: inherit; text-decoration: none; cursor: pointer; }
+    img { display: block; }
+
+    /* ===== CSS VARIABLES (ТОЧНО КАК В ОРИГИНАЛЕ) ===== */
+    :root {
+      --bg: #14161A;
+      --bg-secondary: #282933;
+      --bg-tertiary: #404452;
+      --bg-card: #1E1F26;
+      --bg-hover: #2A2B36;
+      --text: #EBECF0;
+      --text-secondary: #A4A8B2;
+      --text-placeholder: #707480;
+      --brand: #2663F0;
+      --brand-hover: #5286FF;
+      --brand-gradient: linear-gradient(135deg, #2663F0, #00D4FF);
+      --green: #10A350;
+      --green-light: #22BD65;
+      --red: #F0305D;
+      --red-light: #FF4D76;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --transition: 0.25s ease;
     }
-    .item {
-      background: #1E1F26;
-      border-radius: 12px;
-      padding: 12px 8px;
-      text-align: center;
-      border: 1px solid #282933;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.2s, border-color 0.2s;
+    .light {
+      --bg: #FFFFFF;
+      --bg-secondary: #F2F4F7;
+      --bg-tertiary: #E1E3E8;
+      --bg-card: #FFFFFF;
+      --bg-hover: #F0F2F5;
+      --text: #000000;
+      --text-secondary: #828794;
+      --text-placeholder: #A4A8B2;
+      --shadow: 0 8px 32px rgba(0,0,0,0.08);
     }
-    .item:active { transform: scale(0.95); }
-    .item img {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      object-fit: contain;
-      background: rgba(255,255,255,0.03);
-    }
-    .item span {
-      font-size: 11px;
-      color: #A4A8B2;
-      white-space: nowrap;
-      font-weight: 500;
-    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--brand); border-radius: 4px; }
+
+    /* ===== HEADER ===== */
     .header {
-      text-align: center;
-      font-size: 22px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(20, 22, 26, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo {
       font-weight: 700;
-      background: linear-gradient(135deg, #2663F0, #00D4FF);
+      font-size: 20px;
+      background: var(--brand-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .header-search {
+      flex: 1;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-placeholder);
+      transition: background var(--transition);
+      max-width: 320px;
+    }
+    .header-search:active { background: var(--bg-tertiary); }
+    .header-search svg { width: 18px; height: 18px; fill: var(--text-placeholder); flex-shrink: 0; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
+    .header-right button {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color var(--transition);
+      white-space: nowrap;
+    }
+    .header-right button:hover { color: var(--text); }
+    .header-theme {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: background var(--transition);
+    }
+    .header-theme:active { background: var(--bg-tertiary); }
+
+    /* ===== BANNER SWIPER ===== */
+    .banner-swiper {
+      margin: 12px 16px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .banner-swiper .swiper-slide {
+      aspect-ratio: 16/7;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: clamp(16px, 3vw, 28px);
+      color: #fff;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .banner-swiper .swiper-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, transparent 60%);
+    }
+    .banner-swiper .swiper-slide span {
+      position: relative;
+      z-index: 1;
+      padding: 12px 24px;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .banner-swiper .swiper-pagination-bullet {
+      background: rgba(255,255,255,0.4);
+      opacity: 1;
+    }
+    .banner-swiper .swiper-pagination-bullet-active {
+      background: #fff;
+    }
+
+    /* ===== QUICK LINKS ===== */
+    .quick-links {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
       margin-bottom: 16px;
     }
+    .quick-links::-webkit-scrollbar { display: none; }
+    .quick-link {
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .quick-link:active { background: var(--brand); color: #fff; }
+    .quick-link img, .quick-link svg {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ===== CATEGORIES ===== */
+    .categories {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--bg-secondary);
+    }
+    .categories::-webkit-scrollbar { display: none; }
+    .category {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      transition: all var(--transition);
+    }
+    .category.active {
+      color: var(--brand);
+      background: rgba(38, 99, 240, 0.12);
+    }
+    .category:active { transform: scale(0.95); }
+
+    /* ===== TOP-UP SECTION ===== */
+    .topup {
+      background: var(--bg-secondary);
+      margin: 0 16px 16px;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .topup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .topup-header h3 { font-size: 16px; font-weight: 700; }
+    .topup-header button { font-size: 13px; color: var(--brand); font-weight: 500; }
+    .topup-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .topup-field {
+      flex: 1;
+      min-width: 120px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      border: 1px solid var(--bg-tertiary);
+    }
+    .topup-field label {
+      font-size: 11px;
+      color: var(--text-placeholder);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .topup-field input {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      width: 100%;
+      outline: none;
+    }
+    .topup-field input::placeholder { color: var(--text-placeholder); }
+    .topup-pay {
+      background: var(--brand-gradient);
+      color: #fff;
+      font-weight: 700;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      text-align: center;
+      flex: 1;
+      min-width: 140px;
+      font-size: 15px;
+      transition: transform var(--transition);
+    }
+    .topup-pay:active { transform: scale(0.97); }
+
+    /* ===== PRODUCT GRID ===== */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 16px;
+    }
+    @media (min-width: 500px) {
+      .products { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 768px) {
+      .products { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--bg-secondary);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .product-card:active { transform: scale(0.97); }
+    .product-image {
+      aspect-ratio: 4/3;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .product-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      color: #fff;
+      background: var(--green);
+    }
+    .product-badge.red { background: var(--red); }
+    .product-badge.discount { background: var(--brand); }
+    .product-info { padding: 10px 12px 12px; }
+    .product-title {
+      font-size: 13px;
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .product-price .old {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-placeholder);
+      text-decoration: line-through;
+    }
+    .product-price .discount-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--red);
+      padding: 0 6px;
+      border-radius: 4px;
+    }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .product-rating .stars { color: #FFB800; letter-spacing: 1px; }
+    .product-seller {
+      font-size: 11px;
+      color: var(--text-placeholder);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .product-seller .verified {
+      color: var(--brand);
+      font-size: 14px;
+    }
+    .product-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .product-actions button {
+      flex: 1;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      transition: background var(--transition);
+    }
+    .product-actions .buy {
+      background: var(--brand);
+      color: #fff;
+    }
+    .product-actions .buy:active { background: var(--brand-hover); }
+    .product-actions .cart {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
+    .product-actions .cart:active { background: var(--bg-tertiary); }
+
+    /* ===== SHOW MORE ===== */
+    .show-more {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 20px auto 0;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      color: var(--text-secondary);
+      transition: background var(--transition);
+    }
+    .show-more:active { background: var(--bg-tertiary); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-top: 40px;
+      padding: 24px 16px 80px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--bg-tertiary);
+    }
+    .footer-section { margin-bottom: 20px; }
+    .footer-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-placeholder);
+      transition: color var(--transition);
+    }
+    .footer-links a:active { color: var(--brand); }
+    .footer-payments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .footer-payments span {
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--text-secondary);
+      transition: background var(--transition);
+    }
+    .footer-social a:active { background: var(--bg-tertiary); }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-placeholder);
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* ===== TELEGRAM BOTTOM BUTTON ===== */
+    .tg-btn {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 50;
+      background: var(--brand-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(38, 99, 240, 0.4);
+      transition: transform var(--transition);
+    }
+    .tg-btn:active { transform: scale(0.97); }
+    .tg-btn.hidden { display: none; }
+
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 480px) {
-      .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-      .item img { width: 38px; height: 38px; }
+      .header-search { max-width: 160px; font-size: 13px; }
+      .header-right button { font-size: 12px; }
+      .topup-row { flex-direction: column; }
+      .topup-pay { min-width: unset; }
+    }
+    @media (min-width: 1024px) {
+      .header { padding: 16px 24px; }
+      .banner-swiper { margin: 16px 24px; }
+      .quick-links, .categories, .products, .topup { padding-left: 24px; padding-right: 24px; }
+      .products { gap: 16px; }
+      .footer { padding: 40px 24px 80px; }
     }
   </style>
 </head>
 <body>
 
-<div class="header">🎮 Playerok — Игры</div>
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-logo">Playerok</div>
+    <div class="header-search">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>Поиск игр и приложений</span>
+    </div>
+    <div class="header-right">
+      <button>Продать</button>
+      <button>Чаты</button>
+      <button>Профиль</button>
+      <button class="header-theme" id="themeToggle">🌙</button>
+    </div>
+  </header>
 
-<div class="grid">
-
-  <!-- 1. Standoff 2 -->
-  <div class="item">
-    <img src="https://i.playerok.com/Lno0YzblhQXTkL7N2HPC6C6PIqhSEUXy43LPziJ2CUk/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTVkYzIzLTU4ZWItNjZlMC0zOWQ2LTEwMGU1NjZhNjVlNi53ZWJw.png" alt="Standoff 2">
-    <span>Standoff 2</span>
+  <!-- ===== BANNER SWIPER ===== -->
+  <div class="banner-swiper swiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" style="background-image: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);">
+        <span>🔥 Brawl Stars — Скидки до 50%</span>
+      </div>
+      <div class="swiper-slide" style="background-image: linear-gradient(135deg, #0f0c29, #302b63, #24243e);">
+        <span>🎮 Пополни Steam с кэшбэком 5%</span>
+      </div>
+      <div class="swiper-slide" style="background-image: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);">
+        <span>💎 Roblox — Лучшие цены на Robux</span>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
   </div>
 
-  <!-- 2. Roblox -->
-  <div class="item">
-    <img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox">
-    <span>Roblox</span>
+  <!-- ===== QUICK LINKS ===== -->
+  <div class="quick-links">
+    <button class="quick-link">🎮 Steam</button>
+    <button class="quick-link">💬 Telegram</button>
+    <button class="quick-link">🎮 PSN</button>
+    <button class="quick-link">📱 Roblox</button>
+    <button class="quick-link">🔫 PUBG</button>
+    <button class="quick-link">⚔️ Brawl</button>
+    <button class="quick-link">🎯 CS2</button>
   </div>
 
-  <!-- 3. PUBG Mobile -->
-  <div class="item">
-    <img src="https://i.playerok.com/x5H1PPGNZB4HkTn5k6CPJC2YMR1idcTo_88Iqu3pUlw/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmM2Y2NiLTY2NjQtNmI0MC1hZDAyLWMwMGVkNmQ0YTUyNi53ZWJw.png" alt="PUBG Mobile">
-    <span>PUBG Mobile</span>
+  <!-- ===== CATEGORIES ===== -->
+  <div class="categories">
+    <button class="category active">🔥 Популярное</button>
+    <button class="category">🎁 Донат</button>
+    <button class="category">📦 Подписки</button>
+    <button class="category">👤 Аккаунты</button>
+    <button class="category">💎 Валюты</button>
+    <button class="category">🔑 Ключи</button>
+    <button class="category">🛡️ Буст</button>
+    <button class="category">🎨 Скины</button>
   </div>
 
-  <!-- 4. Brawl Stars -->
-  <div class="item">
-    <img src="https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png" alt="Brawl Stars">
-    <span>Brawl Stars</span>
+  <!-- ===== TOP-UP SECTION ===== -->
+  <div class="topup">
+    <div class="topup-header">
+      <h3>Пополнить Steam</h3>
+      <button>Ввести промокод →</button>
+    </div>
+    <div class="topup-row">
+      <div class="topup-field">
+        <label>Логин Steam</label>
+        <input type="text" placeholder="Введите логин">
+      </div>
+      <div class="topup-field">
+        <label>Сумма</label>
+        <input type="text" value="1 000 ₽">
+      </div>
+      <div class="topup-pay">Оплатить 1 050 ₽</div>
+    </div>
   </div>
 
-  <!-- 5. PlayStation -->
-  <div class="item">
-    <img src="https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg" alt="PlayStation">
-    <span>PlayStation</span>
-  </div>
+  <!-- ===== PRODUCTS ===== -->
+  <div class="products" id="productGrid"></div>
 
-  <!-- 6. Telegram -->
-  <div class="item">
-    <img src="https://i.playerok.com/Y3ExhbZO9FccM49Swn4BRe4Ij6zMlIgmANguOeHyGTQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLTRmY2UtNjY0MC03YzhjLTc5NWZjZDFjYzBkZi5qcGVn.png" alt="Telegram">
-    <span>Telegram</span>
-  </div>
+  <button class="show-more" id="showMore">Показать еще</button>
 
-  <!-- 7. ChatGPT -->
-  <div class="item">
-    <img src="https://i.playerok.com/gsQ9mOg8XE5h2CDs_TcTy6MLplWLNb5GtYPP0c8WUb8/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTEzZTgzLTExN2MtNmRhMC03MWNkLWJkYWI1MDI0YWRmNy5wbmc.png" alt="ChatGPT">
-    <span>ChatGPT</span>
-  </div>
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-section">
+      <div class="footer-title">Способы оплаты</div>
+      <div class="footer-payments">
+        <span>💳 Карта</span>
+        <span>📱 СБП</span>
+        <span>🏦 Банк</span>
+        <span>💶 USD</span>
+        <span>₿ Крипто</span>
+      </div>
+    </div>
+    <div class="footer-section">
+      <div class="footer-title">Информация</div>
+      <div class="footer-links">
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+        <a href="#">Условия</a>
+        <a href="#">Контакты</a>
+      </div>
+    </div>
+    <div class="footer-section">
+      <div class="footer-title">Социальные сети</div>
+      <div class="footer-social">
+        <a href="#">📱</a>
+        <a href="#">📘</a>
+        <a href="#">🎬</a>
+        <a href="#">🎵</a>
+      </div>
+    </div>
+    <div class="footer-copy">2026 © Playerok — маркетплейс игровых товаров и услуг. Все права защищены.</div>
+  </footer>
 
-  <!-- 8. Claude -->
-  <div class="item">
-    <img src="https://i.playerok.com/VkHUos5KeGt_Nk8M-E0XxknDQcy50Okf9Dzc56hIzNY/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAxMTMzLTNmZGUtNjY0MC04MGJlLTg4ODA1ZDdiZmRjMC5wbmc.jpg" alt="Claude">
-    <span>Claude</span>
-  </div>
+  <!-- ===== TELEGRAM BUTTON ===== -->
+  <button class="tg-btn" id="tgBtn">🚀 Открыть в Telegram</button>
 
-  <!-- 9. App Store -->
-  <div class="item">
-    <img src="https://i.playerok.com/LcGiuy8JggAmJaFCiQlHDXgfvTKmUGL_VUZs6qLNSys/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDYzYTRhLThhYzEtNjY3MC1hZGM2LWVhMWEzY2JhOGY2OC5qcGc.jpg" alt="App Store">
-    <span>App Store</span>
-  </div>
+  <!-- ===== SCRIPTS ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    (function() {
+      'use strict';
 
-  <!-- 10. Clash of Clans -->
-  <div class="item">
-    <img src="https://i.playerok.com/GGWdv5_rHx57twhefOBrjNE8M9xKUl_FM9aRWiU5Xcs/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTQ3YmEzLThlM2EtNmMxMC01YzE1LWQ0Y2VkODlkYTdjNi53ZWJw.png" alt="Clash of Clans">
-    <span>Clash of Clans</span>
-  </div>
+      // ============================================================
+      // 1. ТЕМА
+      // ============================================================
+      const html = document.documentElement;
+      const themeBtn = document.getElementById('themeToggle');
+      let currentTheme = localStorage.getItem('playerok-theme') || 'dark';
 
-  <!-- 11. TikTok -->
-  <div class="item">
-    <img src="https://i.playerok.com/qSgeTvuAOUscpd8tK978LgYDs0NBoo-QKf0ZvYtiNWE/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDVkNTA4LTA5MWQtNjA4MC0zOTAzLWI5MWU2MWM5YzQwOC5wbmc.png" alt="TikTok">
-    <span>TikTok</span>
-  </div>
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          html.classList.add('light');
+          themeBtn.textContent = '☀️';
+        } else {
+          html.classList.remove('light');
+          themeBtn.textContent = '🌙';
+        }
+        currentTheme = theme;
+        localStorage.setItem('playerok-theme', theme);
+      }
+      applyTheme(currentTheme);
+      themeBtn.addEventListener('click', () => {
+        applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+      });
 
-  <!-- 12. Mobile Legends -->
-  <div class="item">
-    <img src="https://i.playerok.com/TVp8GCHtX2vdLb17R3f79mJoLBnW37hA0jEgXuMUNFU/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmY2ODJlLTA0NGUtNmU5MC1mOGJjLTY1MmVhZTQ4ZmYzNS53ZWJw.png" alt="Mobile Legends">
-    <span>Mobile Legends</span>
-  </div>
+      // ============================================================
+      // 2. SWIPER
+      // ============================================================
+      new Swiper('.banner-swiper', {
+        loop: true,
+        autoplay: { delay: 3500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination' },
+        grabCursor: true,
+      });
 
-  <!-- 13. Genshin Impact -->
-  <div class="item">
-    <img src="https://i.playerok.com/j77AT83D_2G-XtFXewDAO1yZ82ZU4GlPpx2A6WrkH2c/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZTdkYjg5LWZjZDQtNmIzMC02OGFkLTEyMTU3NjM4ZmUyMC5wbmc.jpg" alt="Genshin Impact">
-    <span>Genshin Impact</span>
-  </div>
+      // ============================================================
+      // 3. ТОВАРЫ (все позиции со скриншота)
+      // ============================================================
+      const products = [
+        { title: '💎 1500 ROBUX | ЛУЧШАЯ ЦЕНА', price: 1299, oldPrice: 2499, discount: '-48%', rating: 5, reviews: 7176, seller: 'Playerok', verified: true },
+        { title: '🌺 СБОР ДИКОВИНОК 168 ШТ', price: 90, oldPrice: 200, discount: '-55%', rating: 5, reviews: 9, seller: 'GenshinPro', verified: false },
+        { title: '🎵 FL Studio Producer Edition 25', price: 249, oldPrice: 499, discount: '-50%', rating: 5, reviews: 3158, seller: 'AudioKey', verified: true },
+        { title: '🔮 4000 + 400 Баксов по ID', price: 5299, oldPrice: 9999, discount: '-47%', rating: 5, reviews: 5688, seller: 'EchoPro', verified: false },
+        { title: '🎁 10$ подарочная карта (США)', price: 879, oldPrice: 1190, discount: '-26%', rating: 5, reviews: 124, seller: 'Playerok', verified: true },
+        { title: '📅 Pax Historia / Пополнение на 8$', price: 1290, oldPrice: 1499, discount: '-14%', rating: 5, reviews: 1357, seller: 'PaxShop', verified: false },
+        { title: '💎 950 ГЕМОВ | 2 МИНУТЫ', price: 4999, oldPrice: null, discount: null, rating: 5, reviews: 87368, seller: 'BrawlKing', verified: true },
+        { title: '🎮 250 TRY подарочная карта', price: 509, oldPrice: 620, discount: '-18%', rating: 5, reviews: 356, seller: 'Playerok', verified: true },
+        { title: '⚔️ АЛМАЗНЫЙ ПРОПУСК PASS', price: 1199, oldPrice: 1799, discount: '-33%', rating: 5, reviews: 104000, seller: 'ClashShop', verified: false },
+        { title: '🗡️ Total War: MEDIEVAL II', price: 799, oldPrice: 999, discount: '-20%', rating: 5, reviews: 1312, seller: 'KeyMaster', verified: true },
+        { title: '🛡️ BRAWL PRO PASS | НОВИНКА', price: 2399, oldPrice: 2999, discount: '-20%', rating: 5, reviews: 100000, seller: 'BrawlShop', verified: false },
+        { title: '🎯 DOOM Eternal | STEAM KEY', price: 1450, oldPrice: 2000, discount: '-27%', rating: 5, reviews: 7, seller: 'GameKey', verified: true },
+      ];
 
-  <!-- 14. Steam -->
-  <div class="item">
-    <img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam">
-    <span>Steam</span>
-  </div>
+      const icons = ['🎮', '🌺', '🎵', '🔮', '🎁', '📅', '💎', '🎮', '⚔️', '🗡️', '🛡️', '🎯'];
 
-  <!-- 15. Minecraft -->
-  <div class="item">
-    <img src="https://i.playerok.com/I6fX4VN-aC7UFwgcDSQuLnVS6K4J5Im8g_FHBBqZtkk/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaWNvbnMvbWluZWNyYWZ0LnBuZw.png" alt="Minecraft">
-    <span>Minecraft</span>
-  </div>
+      let visibleCount = 6;
 
-  <!-- 16. Clash Royale -->
-  <div class="item">
-    <img src="https://i.playerok.com/w49xdSessKulGR49hwoXuNc1E0cWoJkc_lWA87zHDyE/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGJkNjlkLTFkMjktNjUyMC04ZDk0LWIxNTA2ZjkzODA0OC5qcGc.jpg" alt="Clash Royale">
-    <span>Clash Royale</span>
-  </div>
+      function renderProducts(count) {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '';
+        const items = products.slice(0, count);
+        items.forEach((p, i) => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          const stars = '⭐'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
+          const icon = icons[i % icons.length];
+          card.innerHTML = `
+            <div class="product-image">
+              <span style="font-size:48px;">${icon}</span>
+              ${p.discount ? `<span class="product-badge ${p.discount.includes('55') || p.discount.includes('50') ? 'red' : 'discount'}">${p.discount}</span>` : ''}
+            </div>
+            <div class="product-info">
+              <div class="product-title">${p.title}</div>
+              <div class="product-price">
+                ${p.price} ₽
+                ${p.oldPrice ? `<span class="old">${p.oldPrice} ₽</span>` : ''}
+                ${p.discount ? `<span class="discount-label">${p.discount}</span>` : ''}
+              </div>
+              <div class="product-rating">
+                <span class="stars">${stars}</span>
+                <span>${p.reviews.toLocaleString()}</span>
+              </div>
+              <div class="product-seller">
+                ${p.verified ? '<span class="verified">✅</span>' : ''}
+                ${p.seller}
+              </div>
+              <div class="product-actions">
+                <button class="buy">Купить</button>
+                <button class="cart">🛒</button>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+        document.getElementById('showMore').textContent = count >= products.length ? 'Показать меньше' : 'Показать еще';
+      }
 
-  <!-- 17. BR (добавил из твоего первого кода) -->
-  <div class="item">
-    <img src="https://i.playerok.com/Zw1F2ahkYY_PvI_6x96t2sGU4hltdaMWuxoNy84pmdA/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTUwNTMxLTM4OWMtNjY2MC0zOGM5LTFmMTYzZjZhNmVlOC5KUEVH.jpg" alt="BR">
-    <span>BR</span>
-  </div>
+      renderProducts(visibleCount);
 
-  <!-- 18. Discord -->
-  <div class="item">
-    <img src="https://i.playerok.com/fj_m0MC4zC5XT1j_zskK5J3gGfriZ1YtBvymKZ5JnaU/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4Y2U4LTYzZmYtNjg4MC1jMWQ0LTU4MzBjZTg3YjliNC5wbmc.png" alt="Discord">
-    <span>Discord</span>
-  </div>
+      document.getElementById('showMore').addEventListener('click', function() {
+        if (visibleCount >= products.length) {
+          visibleCount = 4;
+        } else {
+          visibleCount += 4;
+          if (visibleCount > products.length) visibleCount = products.length;
+        }
+        renderProducts(visibleCount);
+      });
 
-  <!-- 19. SCraft -->
-  <div class="item">
-    <img src="https://i.playerok.com/Zs2UPqNoWAjKuma15uWx3boxxfehp6Abssu4HjbdVYc/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMDkyMzk4LWU5NDQtNmMwMC1hMjkzLWU4NjFjMGFjODc0ZS5qcGc.jpg" alt="SCraft">
-    <span>SCraft</span>
-  </div>
+      // ============================================================
+      // 4. КАТЕГОРИИ
+      // ============================================================
+      document.querySelectorAll('.category').forEach(cat => {
+        cat.addEventListener('click', function() {
+          document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
 
-  <!-- 20. EA SPORTS FC Mobile -->
-  <div class="item">
-    <img src="https://i.playerok.com/tb7NKdL45sQvIuYXMM6g7geqVFm4AaOlCGNGYmhRp-k/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGJkNmE1LTk4ZmItNmE2MC01NjRlLWUxNDBmY2FhZDdhZi5qcGc.png" alt="EA SPORTS FC Mobile">
-    <span>EA SPORTS FC</span>
-  </div>
+      // ============================================================
+      // 5. TELEGRAM
+      // ============================================================
+      const tgBtn = document.getElementById('tgBtn');
+      const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
+      if (isTelegram) {
+        tgBtn.classList.add('hidden');
+        try {
+          Telegram.WebApp.expand();
+          Telegram.WebApp.setHeaderColor('#14161A');
+          Telegram.WebApp.setBackgroundColor('#14161A');
+        } catch (_) {}
+      } else {
+        tgBtn.textContent = '📱 Открыть в Telegram';
+        tgBtn.addEventListener('click', function() {
+          window.open('https://t.me/playerok_bot', '_blank');
+        });
+      }
 
-</div>
+      // ============================================================
+      // 6. ПОИСК
+      // ============================================================
+      document.querySelector('.header-search').addEventListener('click', function() {
+        const query = prompt('🔍 Введите запрос для поиска:');
+        if (query && query.trim()) {
+          alert(`🔎 Поиск "${query.trim()}" (демо-режим)`);
+        }
+      });
+
+      // ============================================================
+      // 7. КНОПКИ "КУПИТЬ"
+      // ============================================================
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('buy')) {
+          alert('✅ Товар добавлен в корзину (демо-режим)');
+        }
+        if (e.target.classList.contains('cart')) {
+          alert('🛒 Товар добавлен в избранное (демо-режим)');
+        }
+      });
+
+      console.log('✅ Playerok Mini App готов!');
+    })();
+  </script>
 
 </body>
 </html>
