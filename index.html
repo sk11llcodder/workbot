@@ -1,717 +1,292 @@
 <!DOCTYPE html>
 <html lang="ru" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Playerok — маркетплейс</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: #14161A;
-      color: #EBECF0;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      padding-bottom: 80px;
-    }
-    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
-    a { color: inherit; text-decoration: none; }
-    img { display: block; }
-
-    :root {
-      --bg: #14161A;
-      --bg-secondary: #282933;
-      --bg-tertiary: #404452;
-      --bg-card: #1E1F26;
-      --text: #EBECF0;
-      --text-secondary: #A4A8B2;
-      --text-placeholder: #707480;
-      --brand: #2663F0;
-      --brand-gradient: linear-gradient(135deg, #2663F0, #00D4FF);
-      --green: #10A350;
-      --green-light: #22BD65;
-      --red: #F0305D;
-      --radius: 12px;
-      --radius-lg: 16px;
-    }
-    .light {
-      --bg: #FFFFFF;
-      --bg-secondary: #F2F4F7;
-      --bg-tertiary: #E1E3E8;
-      --bg-card: #FFFFFF;
-      --text: #000000;
-      --text-secondary: #828794;
-      --text-placeholder: #A4A8B2;
-    }
-
-    /* ===== HEADER ===== */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(20,22,26,0.92);
-      backdrop-filter: blur(12px);
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .header-logo {
-      font-weight: 700;
-      font-size: 18px;
-      background: var(--brand-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .header-search {
-      flex: 1;
-      max-width: 240px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-placeholder);
-    }
-    .header-search svg { width: 16px; height: 16px; fill: var(--text-placeholder); flex-shrink: 0; }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-left: auto;
-    }
-    .header-right button {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-    .header-theme {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    /* ===== БАННЕР ===== */
-    .banner-swiper {
-      margin: 8px 16px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      height: 100px;
-    }
-    .banner-swiper .swiper-slide {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: clamp(14px, 2vw, 20px);
-      color: #fff;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .banner-swiper .swiper-slide::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, transparent 60%);
-    }
-    .banner-swiper .swiper-slide span {
-      position: relative;
-      z-index: 1;
-      padding: 8px 18px;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(6px);
-      border-radius: var(--radius);
-      font-size: clamp(12px, 1.6vw, 16px);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .banner-swiper .swiper-slide span img {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      flex-shrink: 0;
-    }
-    .banner-swiper .swiper-pagination-bullet {
-      background: rgba(255,255,255,0.4);
-      opacity: 1;
-    }
-    .banner-swiper .swiper-pagination-bullet-active { background: #fff; }
-
-    /* ===== QUICK LINKS ===== */
-    .quick-links {
-      display: flex;
-      gap: 6px;
-      padding: 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-bottom: 12px;
-    }
-    .quick-links::-webkit-scrollbar { display: none; }
-    .quick-link {
-      flex-shrink: 0;
-      background: var(--bg-secondary);
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .quick-link img {
-      width: 18px; height: 18px;
-      border-radius: 4px;
-      flex-shrink: 0;
-      object-fit: contain;
-    }
-
-    /* ===== CATEGORIES ===== */
-    .categories {
-      display: flex;
-      gap: 6px;
-      padding: 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--bg-secondary);
-    }
-    .categories::-webkit-scrollbar { display: none; }
-    .category {
-      flex-shrink: 0;
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .category img {
-      width: 16px; height: 16px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      object-fit: contain;
-    }
-    .category.active {
-      color: var(--brand);
-      background: rgba(38,99,240,0.12);
-    }
-
-    /* ===== TOP-UP ===== */
-    .topup {
-      background: var(--bg-secondary);
-      margin: 0 16px 12px;
-      border-radius: var(--radius-lg);
-      padding: 12px 14px;
-    }
-    .topup-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .topup-header h3 { font-size: 14px; font-weight: 700; }
-    .topup-header button { font-size: 12px; color: var(--brand); }
-    .topup-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .topup-field {
-      flex: 1;
-      min-width: 100px;
-      background: var(--bg-card);
-      border-radius: var(--radius);
-      padding: 8px 12px;
-      border: 1px solid var(--bg-tertiary);
-    }
-    .topup-field label {
-      font-size: 10px;
-      color: var(--text-placeholder);
-      display: block;
-      margin-bottom: 2px;
-    }
-    .topup-field input {
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 600;
-      width: 100%;
-      outline: none;
-    }
-    .topup-pay {
-      background: var(--brand-gradient);
-      color: #fff;
-      font-weight: 700;
-      padding: 10px 16px;
-      border-radius: var(--radius);
-      text-align: center;
-      flex: 1;
-      min-width: 120px;
-      font-size: 14px;
-    }
-
-    /* ===== PRODUCTS ===== */
-    .products {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding: 0 16px;
-    }
-    @media (min-width: 500px) { .products { grid-template-columns: repeat(3, 1fr); } }
-    @media (min-width: 768px) { .products { grid-template-columns: repeat(4, 1fr); } }
-
-    .product-card {
-      background: var(--bg-card);
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--bg-secondary);
-    }
-    .product-image {
-      aspect-ratio: 4/3;
-      background: var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding: 8px;
-    }
-    .product-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .product-badge {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 100px;
-      color: #fff;
-      background: var(--green);
-    }
-    .product-badge.red { background: var(--red); }
-    .product-info { padding: 8px 10px 10px; }
-    .product-title {
-      font-size: 12px;
-      font-weight: 600;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.3;
-      margin-bottom: 2px;
-    }
-    .product-price {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--green-light);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-    .product-price .old {
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--text-placeholder);
-      text-decoration: line-through;
-    }
-    .product-rating {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 2px;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-    .product-rating .stars { color: #FFB800; font-size: 12px; }
-    .product-seller {
-      font-size: 10px;
-      color: var(--text-placeholder);
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .product-seller .verified { color: var(--brand); font-size: 12px; }
-    .product-actions {
-      display: flex;
-      gap: 4px;
-      margin-top: 6px;
-    }
-    .product-actions button {
-      flex: 1;
-      padding: 4px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      text-align: center;
-    }
-    .product-actions .buy {
-      background: var(--brand);
-      color: #fff;
-    }
-    .product-actions .cart {
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
-      flex: 0.4;
-      font-size: 14px;
-    }
-
-    .show-more {
-      display: block;
-      width: calc(100% - 32px);
-      margin: 16px auto 0;
-      padding: 12px;
-      border-radius: var(--radius);
-      background: var(--bg-secondary);
-      font-weight: 600;
-      font-size: 14px;
-      text-align: center;
-      color: var(--text-secondary);
-    }
-
-    /* ===== FOOTER ===== */
-    .footer {
-      margin-top: 32px;
-      padding: 20px 16px 80px;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--bg-tertiary);
-    }
-    .footer-section { margin-bottom: 14px; }
-    .footer-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text-secondary);
-    }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 14px;
-    }
-    .footer-links a {
-      font-size: 12px;
-      color: var(--text-placeholder);
-    }
-    .footer-payments {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .footer-payments img {
-      height: 28px;
-      width: auto;
-      border-radius: 4px;
-      background: var(--bg);
-      padding: 2px 6px;
-    }
-    .footer-social {
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-    }
-    .footer-social a {
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .footer-social a img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-    .footer-copy {
-      font-size: 11px;
-      color: var(--text-placeholder);
-      margin-top: 12px;
-      text-align: center;
-    }
-
-    .tg-btn {
-      position: fixed;
-      bottom: 12px;
-      left: 16px; right: 16px;
-      z-index: 50;
-      background: var(--brand-gradient);
-      color: #fff;
-      font-weight: 700;
-      font-size: 14px;
-      padding: 12px;
-      border-radius: var(--radius);
-      text-align: center;
-    }
-    .tg-btn.hidden { display: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Playerok — маркетплейс</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:#14161A;color:#EBECF0;overflow-x:hidden;-webkit-font-smoothing:antialiased;padding-bottom:80px}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+img{display:block}
+:root{--bg:#14161A;--bg-secondary:#282933;--bg-tertiary:#404452;--bg-card:#1E1F26;--text:#EBECF0;--text-secondary:#A4A8B2;--text-placeholder:#707480;--brand:#2663F0;--brand-gradient:linear-gradient(135deg,#2663F0,#00D4FF);--green:#10A350;--green-light:#22BD65;--red:#F0305D;--radius:12px;--radius-lg:16px}
+.light{--bg:#FFFFFF;--bg-secondary:#F2F4F7;--bg-tertiary:#E1E3E8;--bg-card:#FFFFFF;--text:#000000;--text-secondary:#828794;--text-placeholder:#A4A8B2}
+.header{position:sticky;top:0;z-index:100;background:rgba(20,22,26,0.92);backdrop-filter:blur(12px);padding:12px 16px;border-bottom:1px solid var(--bg-secondary);display:flex;align-items:center;gap:12px}
+.header-logo{font-weight:700;font-size:20px;background:var(--brand-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;flex-shrink:0}
+.header-search{flex:1;max-width:280px;background:var(--bg-secondary);border-radius:var(--radius);padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-placeholder)}
+.header-search svg{width:18px;height:18px;fill:var(--text-placeholder);flex-shrink:0}
+.header-right{display:flex;align-items:center;gap:14px;margin-left:auto}
+.header-right button{font-size:14px;font-weight:500;color:var(--text-secondary);white-space:nowrap}
+.header-theme{width:36px;height:36px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.banner-swiper{margin:12px 16px;border-radius:var(--radius-lg);overflow:hidden;height:130px}
+.banner-swiper .swiper-slide{height:100%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(14px,2vw,20px);color:#fff;background-size:cover;background-position:center;position:relative}
+.banner-swiper .swiper-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,0.5)0%,transparent 60%)}
+.banner-swiper .swiper-slide span{position:relative;z-index:1;padding:10px 20px;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);border-radius:var(--radius);display:flex;align-items:center;gap:10px;font-size:clamp(13px,1.8vw,17px)}
+.banner-swiper .swiper-slide span img{width:32px;height:32px;border-radius:6px;flex-shrink:0}
+.banner-swiper .swiper-pagination-bullet{background:rgba(255,255,255,0.4);opacity:1}
+.banner-swiper .swiper-pagination-bullet-active{background:#fff}
+.quick-links{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px}
+.quick-links::-webkit-scrollbar{display:none}
+.quick-link{flex-shrink:0;background:var(--bg-secondary);padding:6px 16px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text-secondary);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.quick-link img{width:20px;height:20px;border-radius:4px;flex-shrink:0;object-fit:contain}
+.categories{display:flex;gap:8px;padding:0 16px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bg-secondary)}
+.categories::-webkit-scrollbar{display:none}
+.category{flex-shrink:0;padding:6px 14px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text-secondary);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.category img{width:18px;height:18px;border-radius:3px;flex-shrink:0;object-fit:contain}
+.category.active{color:var(--brand);background:rgba(38,99,240,0.12)}
+.topup{background:var(--bg-secondary);margin:0 16px 14px;border-radius:var(--radius-lg);padding:14px 16px}
+.topup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.topup-header h3{font-size:15px;font-weight:700}
+.topup-header button{font-size:13px;color:var(--brand)}
+.topup-row{display:flex;gap:10px;flex-wrap:wrap}
+.topup-field{flex:1;min-width:110px;background:var(--bg-card);border-radius:var(--radius);padding:10px 14px;border:1px solid var(--bg-tertiary)}
+.topup-field label{font-size:11px;color:var(--text-placeholder);display:block;margin-bottom:3px}
+.topup-field input{background:transparent;border:none;color:var(--text);font-size:15px;font-weight:600;width:100%;outline:none}
+.topup-pay{background:var(--brand-gradient);color:#fff;font-weight:700;padding:12px 20px;border-radius:var(--radius);text-align:center;flex:1;min-width:130px;font-size:15px}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px}
+@media(min-width:500px){.products{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.products{grid-template-columns:repeat(4,1fr)}}
+.product-card{background:var(--bg-card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--bg-secondary)}
+.product-image{aspect-ratio:4/3;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:10px}
+.product-image img{width:100%;height:100%;object-fit:contain}
+.product-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;color:#fff;background:var(--green)}
+.product-badge.red{background:var(--red)}
+.product-badge.discount{background:var(--brand)}
+.product-info{padding:10px 12px 12px}
+.product-title{font-size:13px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3;margin-bottom:3px}
+.product-price{font-size:16px;font-weight:700;color:var(--green-light);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.product-price .old{font-size:12px;font-weight:400;color:var(--text-placeholder);text-decoration:line-through}
+.product-price .discount-label{font-size:11px;font-weight:700;color:#fff;background:var(--red);padding:0 6px;border-radius:4px}
+.product-rating{display:flex;align-items:center;gap:4px;margin-top:3px;font-size:12px;color:var(--text-secondary)}
+.product-rating .stars{color:#FFB800;font-size:13px;letter-spacing:1px}
+.product-seller{font-size:11px;color:var(--text-placeholder);margin-top:3px;display:flex;align-items:center;gap:4px}
+.product-seller .verified{color:var(--brand);font-size:13px}
+.product-actions{display:flex;gap:6px;margin-top:8px}
+.product-actions button{flex:1;padding:6px;border-radius:6px;font-size:12px;font-weight:600;text-align:center}
+.product-actions .buy{background:var(--brand);color:#fff}
+.product-actions .cart{background:var(--bg-secondary);color:var(--text-secondary);flex:0.4;font-size:15px}
+.show-more{display:block;width:calc(100% - 32px);margin:18px auto 0;padding:14px;border-radius:var(--radius);background:var(--bg-secondary);font-weight:600;font-size:15px;text-align:center;color:var(--text-secondary)}
+.footer{margin-top:36px;padding:24px 16px 80px;background:var(--bg-secondary);border-top:1px solid var(--bg-tertiary)}
+.footer-section{margin-bottom:16px}
+.footer-title{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text-secondary)}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px}
+.footer-links a{font-size:13px;color:var(--text-placeholder)}
+.footer-payments{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.footer-payments img{height:30px;width:auto;border-radius:4px;background:var(--bg);padding:2px 8px}
+.footer-social{display:flex;gap:12px;margin-top:8px}
+.footer-social a{width:38px;height:38px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.footer-social a img{width:22px;height:22px;object-fit:contain}
+.footer-copy{font-size:12px;color:var(--text-placeholder);margin-top:14px;text-align:center}
+.tg-btn{position:fixed;bottom:14px;left:16px;right:16px;z-index:50;background:var(--brand-gradient);color:#fff;font-weight:700;font-size:15px;padding:14px;border-radius:var(--radius);text-align:center}
+.tg-btn.hidden{display:none}
+@media(max-width:480px){.header-search{max-width:140px;font-size:12px}.header-right button{font-size:12px}.topup-row{flex-direction:column}.topup-pay{min-width:unset}}
+</style>
 </head>
 <body>
+<!-- ===== HEADER ===== -->
+<header class="header">
+<div class="header-logo">Playerok</div>
+<div class="header-search">
+<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+<span>Поиск игр и приложений</span>
+</div>
+<div class="header-right">
+<button>Продать</button>
+<button>Чаты</button>
+<button>Профиль</button>
+<button class="header-theme" id="themeToggle">🌙</button>
+</div>
+</header>
 
-  <!-- ===== HEADER ===== -->
-  <header class="header">
-    <div class="header-logo">Playerok</div>
-    <div class="header-search">
-      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <span>Поиск</span>
-    </div>
-    <div class="header-right">
-      <button>Продать</button>
-      <button>Чаты</button>
-      <button>Профиль</button>
-      <button class="header-theme" id="themeToggle">🌙</button>
-    </div>
-  </header>
+<!-- ===== БАННЕР ===== -->
+<div class="banner-swiper swiper">
+<div class="swiper-wrapper">
+<div class="swiper-slide" style="background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d)">
+<span><img src="https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png" alt="Brawl"> Brawl Stars — Скидки до 50%</span>
+</div>
+<div class="swiper-slide" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e)">
+<span><img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam"> Пополни Steam с кэшбэком 5%</span>
+</div>
+<div class="swiper-slide" style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)">
+<span><img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox"> Roblox — Лучшие цены</span>
+</div>
+</div>
+<div class="swiper-pagination"></div>
+</div>
 
-  <!-- ===== БАННЕР (с PNG-иконками) ===== -->
-  <div class="banner-swiper swiper">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide" style="background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);">
-        <span><img src="https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png" alt="Brawl"> Brawl Stars — Скидки до 50%</span>
-      </div>
-      <div class="swiper-slide" style="background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);">
-        <span><img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam"> Пополни Steam с кэшбэком 5%</span>
-      </div>
-      <div class="swiper-slide" style="background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);">
-        <span><img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox"> Roblox — Лучшие цены</span>
-      </div>
-    </div>
-    <div class="swiper-pagination"></div>
-  </div>
+<!-- ===== QUICK LINKS ===== -->
+<div class="quick-links">
+<button class="quick-link"><img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam"> Steam</button>
+<button class="quick-link"><img src="https://i.playerok.com/Y3ExhbZO9FccM49Swn4BRe4Ij6zMlIgmANguOeHyGTQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLTRmY2UtNjY0MC03YzhjLTc5NWZjZDFjYzBkZi5qcGVn.png" alt="Telegram"> Telegram</button>
+<button class="quick-link"><img src="https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg" alt="PSN"> PSN</button>
+<button class="quick-link"><img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox"> Roblox</button>
+<button class="quick-link"><img src="https://i.playerok.com/x5H1PPGNZB4HkTn5k6CPJC2YMR1idcTo_88Iqu3pUlw/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmM2Y2NiLTY2NjQtNmI0MC1hZDAyLWMwMGVkNmQ0YTUyNi53ZWJw.png" alt="PUBG"> PUBG</button>
+</div>
 
-  <!-- ===== QUICK LINKS (PNG) ===== -->
-  <div class="quick-links">
-    <button class="quick-link"><img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam"> Steam</button>
-    <button class="quick-link"><img src="https://i.playerok.com/Y3ExhbZO9FccM49Swn4BRe4Ij6zMlIgmANguOeHyGTQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLTRmY2UtNjY0MC03YzhjLTc5NWZjZDFjYzBkZi5qcGVn.png" alt="Telegram"> Telegram</button>
-    <button class="quick-link"><img src="https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg" alt="PSN"> PSN</button>
-    <button class="quick-link"><img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox"> Roblox</button>
-    <button class="quick-link"><img src="https://i.playerok.com/x5H1PPGNZB4HkTn5k6CPJC2YMR1idcTo_88Iqu3pUlw/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmM2Y2NiLTY2NjQtNmI0MC1hZDAyLWMwMGVkNmQ0YTUyNi53ZWJw.png" alt="PUBG"> PUBG</button>
-  </div>
+<!-- ===== КАТЕГОРИИ ===== -->
+<div class="categories">
+<button class="category active"><img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam"> Популярное</button>
+<button class="category"><img src="https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png" alt="Brawl"> Донат</button>
+<button class="category"><img src="https://i.playerok.com/Y3ExhbZO9FccM49Swn4BRe4Ij6zMlIgmANguOeHyGTQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLTRmY2UtNjY0MC03YzhjLTc5NWZjZDFjYzBkZi5qcGVn.png" alt="Telegram"> Подписки</button>
+<button class="category"><img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox"> Аккаунты</button>
+<button class="category"><img src="https://i.playerok.com/x5H1PPGNZB4HkTn5k6CPJC2YMR1idcTo_88Iqu3pUlw/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmM2Y2NiLTY2NjQtNmI0MC1hZDAyLWMwMGVkNmQ0YTUyNi53ZWJw.png" alt="PUBG"> Валюты</button>
+<button class="category"><img src="https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg" alt="PSN"> Ключи</button>
+</div>
 
-  <!-- ===== CATEGORIES (PNG) ===== -->
-  <div class="categories">
-    <button class="category active"><img src="https://i.playerok.com/kVWt0DeOGIk1swjv_Dibw-MdvKnwE2gXoH0N2bc0670/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLThmN2UtNjFhMC1mMTZjLThhZjE1NTkyY2I3MC5qcGVn.png" alt="Steam"> Популярное</button>
-    <button class="category"><img src="https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png" alt="Brawl"> Донат</button>
-    <button class="category"><img src="https://i.playerok.com/Y3ExhbZO9FccM49Swn4BRe4Ij6zMlIgmANguOeHyGTQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTAwMmVjLTRmY2UtNjY0MC03YzhjLTc5NWZjZDFjYzBkZi5qcGVn.png" alt="Telegram"> Подписки</button>
-    <button class="category"><img src="https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png" alt="Roblox"> Аккаунты</button>
-    <button class="category"><img src="https://i.playerok.com/x5H1PPGNZB4HkTn5k6CPJC2YMR1idcTo_88Iqu3pUlw/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmM2Y2NiLTY2NjQtNmI0MC1hZDAyLWMwMGVkNmQ0YTUyNi53ZWJw.png" alt="PUBG"> Валюты</button>
-    <button class="category"><img src="https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg" alt="PSN"> Ключи</button>
-  </div>
+<!-- ===== TOP-UP ===== -->
+<div class="topup">
+<div class="topup-header">
+<h3>Пополнить Steam</h3>
+<button>Ввести промокод →</button>
+</div>
+<div class="topup-row">
+<div class="topup-field">
+<label>Логин Steam</label>
+<input type="text" placeholder="Введите логин">
+</div>
+<div class="topup-field">
+<label>Сумма</label>
+<input type="text" value="1 000 ₽">
+</div>
+<div class="topup-pay">Оплатить 1 050 ₽</div>
+</div>
+</div>
+<!-- ===== ТОВАРЫ ===== -->
+<div class="products" id="productGrid"></div>
+<button class="show-more" id="showMore">Показать еще</button>
 
-  <!-- ===== TOP-UP ===== -->
-  <div class="topup">
-    <div class="topup-header">
-      <h3>Пополнить Steam</h3>
-      <button>Ввести промокод →</button>
-    </div>
-    <div class="topup-row">
-      <div class="topup-field">
-        <label>Логин Steam</label>
-        <input type="text" placeholder="Введите логин">
-      </div>
-      <div class="topup-field">
-        <label>Сумма</label>
-        <input type="text" value="1 000 ₽">
-      </div>
-      <div class="topup-pay">Оплатить 1 050 ₽</div>
-    </div>
-  </div>
+<!-- ===== ФУТЕР ===== -->
+<footer class="footer">
+<div class="footer-section">
+<div class="footer-title">Способы оплаты</div>
+<div class="footer-payments">
+<img src="https://playerok.com/images/Icons/card-ru.svg" alt="Карта">
+<img src="https://playerok.com/images/Icons/SBP.svg" alt="СБП">
+<img src="https://playerok.com/images/Icons/card-kz.svg" alt="Карта KZ">
+<img src="https://playerok.com/images/Icons/card-by.svg" alt="Карта BY">
+</div>
+</div>
+<div class="footer-section">
+<div class="footer-title">Информация</div>
+<div class="footer-links">
+<a href="#">Политика</a>
+<a href="#">Соглашение</a>
+<a href="#">Условия</a>
+<a href="#">Контакты</a>
+</div>
+</div>
+<div class="footer-section">
+<div class="footer-title">Социальные сети</div>
+<div class="footer-social">
+<a href="#"><img src="https://playerok.com/images/Icons/socials/Telegram.svg" alt="Telegram"></a>
+<a href="#"><img src="https://playerok.com/images/Icons/socials/VK.svg" alt="VK"></a>
+<a href="#"><img src="https://playerok.com/images/Icons/socials/YouTube.svg" alt="YouTube"></a>
+<a href="#"><img src="https://playerok.com/images/Icons/socials/TikTok.svg" alt="TikTok"></a>
+</div>
+</div>
+<div class="footer-copy">2026 © Playerok — маркетплейс игровых товаров и услуг. Все права защищены.</div>
+</footer>
 
-  <!-- ===== PRODUCTS (PNG-иконки товаров) ===== -->
-  <div class="products" id="productGrid"></div>
+<button class="tg-btn" id="tgBtn">🚀 Открыть в Telegram</button>
 
-  <button class="show-more" id="showMore">Показать еще</button>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+(function(){
+// ===== ТЕМА =====
+const html=document.documentElement;
+const themeBtn=document.getElementById('themeToggle');
+let currentTheme=localStorage.getItem('playerok-theme')||'dark';
+function applyTheme(theme){if(theme==='light'){html.classList.add('light');themeBtn.textContent='☀️';}else{html.classList.remove('light');themeBtn.textContent='🌙';}currentTheme=theme;localStorage.setItem('playerok-theme',theme);}
+applyTheme(currentTheme);
+themeBtn.addEventListener('click',()=>{applyTheme(currentTheme==='light'?'dark':'light');});
 
-  <!-- ===== FOOTER (PNG-иконки соцсетей и оплаты) ===== -->
-  <footer class="footer">
-    <div class="footer-section">
-      <div class="footer-title">Способы оплаты</div>
-      <div class="footer-payments">
-        <img src="https://playerok.com/images/Icons/card-ru.svg" alt="Карта">
-        <img src="https://playerok.com/images/Icons/SBP.svg" alt="СБП">
-        <img src="https://playerok.com/images/Icons/card-kz.svg" alt="Карта KZ">
-        <img src="https://playerok.com/images/Icons/card-by.svg" alt="Карта BY">
-      </div>
-    </div>
-    <div class="footer-section">
-      <div class="footer-title">Информация</div>
-      <div class="footer-links">
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
-        <a href="#">Условия</a>
-        <a href="#">Контакты</a>
-      </div>
-    </div>
-    <div class="footer-section">
-      <div class="footer-title">Социальные сети</div>
-      <div class="footer-social">
-        <a href="#"><img src="https://playerok.com/images/Icons/socials/Telegram.svg" alt="Telegram"></a>
-        <a href="#"><img src="https://playerok.com/images/Icons/socials/VK.svg" alt="VK"></a>
-        <a href="#"><img src="https://playerok.com/images/Icons/socials/YouTube.svg" alt="YouTube"></a>
-        <a href="#"><img src="https://playerok.com/images/Icons/socials/TikTok.svg" alt="TikTok"></a>
-      </div>
-    </div>
-    <div class="footer-copy">2026 © Playerok — маркетплейс игровых товаров</div>
-  </footer>
+// ===== SWIPER =====
+new Swiper('.banner-swiper',{loop:true,autoplay:{delay:3500,disableOnInteraction:false},pagination:{el:'.swiper-pagination'},grabCursor:true});
 
-  <button class="tg-btn" id="tgBtn">🚀 Открыть в Telegram</button>
+// ===== ТОВАРЫ =====
+const products=[
+{title:'1500 ROBUX | ЛУЧШАЯ ЦЕНА',price:1299,oldPrice:2499,discount:'-48%',rating:5,reviews:7176,seller:'Playerok',verified:true,img:'https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png'},
+{title:'СБОР ДИКОВИНОК 168 ШТ',price:90,oldPrice:200,discount:'-55%',rating:5,reviews:9,seller:'GenshinPro',verified:false,img:'https://i.playerok.com/j77AT83D_2G-XtFXewDAO1yZ82ZU4GlPpx2A6WrkH2c/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZTdkYjg5LWZjZDQtNmIzMC02OGFkLTEyMTU3NjM4ZmUyMC5wbmc.jpg'},
+{title:'FL Studio Producer Edition 25',price:249,oldPrice:499,discount:'-50%',rating:5,reviews:3158,seller:'AudioKey',verified:true,img:'https://i.playerok.com/2Me4z-3A4zqyc8b55XRsqCbfC_DKf6SxuPZULKWCWS8/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmZmNzkzLTRkMDMtNjI0MC0yZTEwLTA2YmRiMGMyMDVkMi5qcGc.png'},
+{title:'4000 + 400 Баксов по ID',price:5299,oldPrice:9999,discount:'-47%',rating:5,reviews:5688,seller:'EchoPro',verified:false,img:'https://i.playerok.com/5l4kQTr4qOer1OnVE1sPod4uHV4lQbao4w_lX0NdFhQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMDcxM2Y0LTA0ZTAtNmE2MC1jOTViLTA5OGI4Y2NmZjRiMS5wbmc.png'},
+{title:'10$ подарочная карта (США)',price:879,oldPrice:1190,discount:'-26%',rating:5,reviews:124,seller:'Playerok',verified:true,img:'https://i.playerok.com/LcGiuy8JggAmJaFCiQlHDXgfvTKmUGL_VUZs6qLNSys/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDYzYTRhLThhYzEtNjY3MC1hZGM2LWVhMWEzY2JhOGY2OC5qcGc.jpg'},
+{title:'Pax Historia / Пополнение на 8$',price:1290,oldPrice:1499,discount:'-14%',rating:5,reviews:1357,seller:'PaxShop',verified:false,img:'https://i.playerok.com/lnGiTt2hJBcCyxgH1ffAPPX2s3kYTUBgMEKCoArtSiQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTM0MzU1LTk5OWYtNjhkMC1lOTQ5LWE3ZmQxMmRkNGQ3Ni5wbmc.jpg'},
+{title:'950 ГЕМОВ | 2 МИНУТЫ',price:4999,oldPrice:null,discount:null,rating:5,reviews:87368,seller:'BrawlKing',verified:true,img:'https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png'},
+{title:'250 TRY подарочная карта',price:509,oldPrice:620,discount:'-18%',rating:5,reviews:356,seller:'Playerok',verified:true,img:'https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg'},
+{title:'АЛМАЗНЫЙ ПРОПУСК PASS',price:1199,oldPrice:1799,discount:'-33%',rating:5,reviews:104000,seller:'ClashShop',verified:false,img:'https://i.playerok.com/w49xdSessKulGR49hwoXuNc1E0cWoJkc_lWA87zHDyE/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGJkNjlkLTFkMjktNjUyMC04ZDk0LWIxNTA2ZjkzODA0OC5qcGc.jpg'},
+{title:'Total War: MEDIEVAL II',price:799,oldPrice:999,discount:'-20%',rating:5,reviews:1312,seller:'KeyMaster',verified:true,img:'https://i.playerok.com/53aDFkPHAUwY8Nsj89JdZC6ypC35Mw70Lira9RJyXHc/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMDRkZWI5LWYzNTAtNjIzMC04YWZhLTVmNmE2MTE3YmQwNi5qcGc.png'},
+];
+<script>
+let visibleCount=6;
+const grid=document.getElementById('productGrid');
+function renderProducts(count){
+grid.innerHTML='';
+products.slice(0,count).forEach(p=>{
+const stars='⭐'.repeat(p.rating)+'☆'.repeat(5-p.rating);
+grid.innerHTML+=`
+<div class="product-card">
+<div class="product-image">
+<img src="${p.img}" alt="${p.title}" loading="lazy">
+${p.discount?`<span class="product-badge ${p.discount.includes('55')||p.discount.includes('50')?'red':''}">${p.discount}</span>`:''}
+</div>
+<div class="product-info">
+<div class="product-title">${p.title}</div>
+<div class="product-price">
+${p.price} ₽
+${p.oldPrice?`<span class="old">${p.oldPrice} ₽</span>`:''}
+${p.discount?`<span class="discount-label">${p.discount}</span>`:''}
+</div>
+<div class="product-rating">
+<span class="stars">${stars}</span>
+<span>${p.reviews.toLocaleString()}</span>
+</div>
+<div class="product-seller">
+${p.verified?'<span class="verified">✅</span>':''}
+${p.seller}
+</div>
+<div class="product-actions">
+<button class="buy">Купить</button>
+<button class="cart">🛒</button>
+</div>
+</div>
+</div>
+`;
+});
+document.getElementById('showMore').textContent=count>=products.length?'Показать меньше':'Показать еще';
+}
+renderProducts(visibleCount);
+document.getElementById('showMore').addEventListener('click',function(){
+if(visibleCount>=products.length){visibleCount=4;}else{visibleCount+=4;if(visibleCount>products.length)visibleCount=products.length;}
+renderProducts(visibleCount);
+});
 
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    (function() {
-      // ===== ТЕМА =====
-      const html = document.documentElement;
-      const themeBtn = document.getElementById('themeToggle');
-      let currentTheme = localStorage.getItem('playerok-theme') || 'dark';
-      function applyTheme(theme) {
-        if (theme === 'light') { html.classList.add('light'); themeBtn.textContent = '☀️'; }
-        else { html.classList.remove('light'); themeBtn.textContent = '🌙'; }
-        currentTheme = theme;
-        localStorage.setItem('playerok-theme', theme);
-      }
-      applyTheme(currentTheme);
-      themeBtn.addEventListener('click', () => {
-        applyTheme(currentTheme === 'light' ? 'dark' : 'light');
-      });
+// ===== КАТЕГОРИИ =====
+document.querySelectorAll('.category').forEach(cat=>{
+cat.addEventListener('click',function(){
+document.querySelectorAll('.category').forEach(c=>c.classList.remove('active'));
+this.classList.add('active');
+});
+});
 
-      // ===== SWIPER =====
-      new Swiper('.banner-swiper', {
-        loop: true,
-        autoplay: { delay: 3500, disableOnInteraction: false },
-        pagination: { el: '.swiper-pagination' },
-        grabCursor: true,
-      });
+// ===== TELEGRAM =====
+const tgBtn=document.getElementById('tgBtn');
+const isTelegram=!!(window.Telegram&&window.Telegram.WebApp);
+if(isTelegram){
+tgBtn.classList.add('hidden');
+try{Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#14161A');Telegram.WebApp.setBackgroundColor('#14161A');}catch(_){}
+}else{
+tgBtn.textContent='📱 Открыть в Telegram';
+tgBtn.addEventListener('click',function(){window.open('https://t.me/playerok_bot','_blank');});
+}
 
-      // ===== ТОВАРЫ (PNG-иконки с Playerok) =====
-      const products = [
-        { title: '1500 ROBUX | ЛУЧШАЯ ЦЕНА', price: 1299, oldPrice: 2499, discount: '-48%', rating: 5, reviews: 7176, seller: 'Playerok', verified: true, img: 'https://i.playerok.com/2CWob7ZhwlCdoLFzc9fYVR3yfHas6eC-MroNL057F54/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGQ0MzljLTU1MWMtNjQ2MC0zZTkyLWI4MWM4ODAxZWJmYy5wbmc.png' },
-        { title: 'СБОР ДИКОВИНОК 168 ШТ', price: 90, oldPrice: 200, discount: '-55%', rating: 5, reviews: 9, seller: 'GenshinPro', verified: false, img: 'https://i.playerok.com/j77AT83D_2G-XtFXewDAO1yZ82ZU4GlPpx2A6WrkH2c/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZTdkYjg5LWZjZDQtNmIzMC02OGFkLTEyMTU3NjM4ZmUyMC5wbmc.jpg' },
-        { title: 'FL Studio Producer Edition 25', price: 249, oldPrice: 499, discount: '-50%', rating: 5, reviews: 3158, seller: 'AudioKey', verified: true, img: 'https://i.playerok.com/2Me4z-3A4zqyc8b55XRsqCbfC_DKf6SxuPZULKWCWS8/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZmZmNzkzLTRkMDMtNjI0MC0yZTEwLTA2YmRiMGMyMDVkMi5qcGc.png' },
-        { title: '4000 + 400 Баксов по ID', price: 5299, oldPrice: 9999, discount: '-47%', rating: 5, reviews: 5688, seller: 'EchoPro', verified: false, img: 'https://i.playerok.com/5l4kQTr4qOer1OnVE1sPod4uHV4lQbao4w_lX0NdFhQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMDcxM2Y0LTA0ZTAtNmE2MC1jOTViLTA5OGI4Y2NmZjRiMS5wbmc.png' },
-        { title: '10$ подарочная карта (США)', price: 879, oldPrice: 1190, discount: '-26%', rating: 5, reviews: 124, seller: 'Playerok', verified: true, img: 'https://i.playerok.com/LcGiuy8JggAmJaFCiQlHDXgfvTKmUGL_VUZs6qLNSys/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDYzYTRhLThhYzEtNjY3MC1hZGM2LWVhMWEzY2JhOGY2OC5qcGc.jpg' },
-        { title: 'Pax Historia / Пополнение на 8$', price: 1290, oldPrice: 1499, discount: '-14%', rating: 5, reviews: 1357, seller: 'PaxShop', verified: false, img: 'https://i.playerok.com/lnGiTt2hJBcCyxgH1ffAPPX2s3kYTUBgMEKCoArtSiQ/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTM0MzU1LTk5OWYtNjhkMC1lOTQ5LWE3ZmQxMmRkNGQ3Ni5wbmc.jpg' },
-        { title: '950 ГЕМОВ | 2 МИНУТЫ', price: 4999, oldPrice: null, discount: null, rating: 5, reviews: 87368, seller: 'BrawlKing', verified: true, img: 'https://i.playerok.com/GyNqXXlEl8W5LKMbXSXxcNw9E55RInogqVWW5LWoE-E/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMTNlNTljLTNlOTYtNjNhMC1lZTJhLTUxYzk3M2U0NjAyZC53ZWJw.png' },
-        { title: '250 TRY подарочная карта', price: 509, oldPrice: 620, discount: '-18%', rating: 5, reviews: 356, seller: 'Playerok', verified: true, img: 'https://i.playerok.com/V-Ccs5x25J6YoSrvgNSNp9HvV0OSu9U4Z4OmVe6GAA4/rs:fill:0:360:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFlZDU4YmY0LThjMjMtNmI4MC1kMTViLWUzYjg4NjExZTE3My5qcGc.jpg' },
-        { title: 'АЛМАЗНЫЙ ПРОПУСК PASS', price: 1199, oldPrice: 1799, discount: '-33%', rating: 5, reviews: 104000, seller: 'ClashShop', verified: false, img: 'https://i.playerok.com/w49xdSessKulGR49hwoXuNc1E0cWoJkc_lWA87zHDyE/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMGJkNjlkLTFkMjktNjUyMC04ZDk0LWIxNTA2ZjkzODA0OC5qcGc.jpg' },
-        { title: 'Total War: MEDIEVAL II', price: 799, oldPrice: 999, discount: '-20%', rating: 5, reviews: 1312, seller: 'KeyMaster', verified: true, img: 'https://i.playerok.com/53aDFkPHAUwY8Nsj89JdZC6ypC35Mw70Lira9RJyXHc/rs:fill:0:2000:0/g:no/quality:99/czM6Ly9wbGF5ZXJvay8vaW1hZ2VzLzFmMDRkZWI5LWYzNTAtNjIzMC04YWZhLTVmNmE2MTE3YmQwNi5qcGc.png' },
-      ];
-
-      let visibleCount = 6;
-      const grid = document.getElementById('productGrid');
-
-      function renderProducts(count) {
-        grid.innerHTML = '';
-        products.slice(0, count).forEach(p => {
-          const stars = '⭐'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
-          grid.innerHTML += `
-            <div class="product-card">
-              <div class="product-image">
-                <img src="${p.img}" alt="${p.title}" loading="lazy">
-                ${p.discount ? `<span class="product-badge ${p.discount.includes('55') || p.discount.includes('50') ? 'red' : ''}">${p.discount}</span>` : ''}
-              </div>
-              <div class="product-info">
-                <div class="product-title">${p.title}</div>
-                <div class="product-price">
-                  ${p.price} ₽
-                  ${p.oldPrice ? `<span class="old">${p.oldPrice} ₽</span>` : ''}
-                </div>
-                <div class="product-rating">
-                  <span class="stars">${stars}</span>
-                  <span>${p.reviews.toLocaleString()}</span>
-                </div>
-                <div class="product-seller">
-                  ${p.verified ? '<span class="verified">✅</span>' : ''}
-                  ${p.seller}
-                </div>
-                <div class="product-actions">
-                  <button class="buy">Купить</button>
-                  <button class="cart">🛒</button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-        document.getElementById('showMore').textContent = count >= products.length ? 'Показать меньше' : 'Показать еще';
-      }
-
-      renderProducts(visibleCount);
-
-      document.getElementById('showMore').addEventListener('click', function() {
-        if (visibleCount >= products.length) {
-          visibleCount = 4;
-        } else {
-          visibleCount += 4;
-          if (visibleCount > products.length) visibleCount = products.length;
-        }
-        renderProducts(visibleCount);
-      });
-
-      // ===== КАТЕГОРИИ =====
-      document.querySelectorAll('.category').forEach(cat => {
-        cat.addEventListener('click', function() {
-          document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
-
-      // ===== TELEGRAM =====
-      const tgBtn = document.getElementById('tgBtn');
-      const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
-      if (isTelegram) {
-        tgBtn.classList.add('hidden');
-        try {
-          Telegram.WebApp.expand();
-          Telegram.WebApp.setHeaderColor('#14161A');
-          Telegram.WebApp.setBackgroundColor('#14161A');
-        } catch (_) {}
-      } else {
-        tgBtn.textContent = '📱 Открыть в Telegram';
-        tgBtn.addEventListener('click', function() {
-          window.open('https://t.me/playerok_bot', '_blank');
-        });
-      }
-
-      // ===== КНОПКИ =====
-      document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('buy')) {
-          alert('✅ Товар добавлен в корзину');
-        }
-        if (e.target.classList.contains('cart')) {
-          alert('🛒 Товар добавлен в избранное');
-        }
-      });
-
-      console.log('✅ Playerok с PNG-иконками готов!');
-    })();
-  </script>
-
+// ===== КНОПКИ =====
+document.addEventListener('click',function(e){
+if(e.target.classList.contains('buy')){alert('✅ Товар добавлен в корзину');}
+if(e.target.classList.contains('cart')){alert('🛒 Товар добавлен в избранное');}
+});
+console.log('✅ Playerok готов!');
+</script>
 </body>
 </html>
