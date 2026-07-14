@@ -4,514 +4,147 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Playerok Mini</title>
-  
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-
   <style>
-    /* ===== RESET ===== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Robbot, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
       background: #14161A;
       color: #EBECF0;
-      overflow-x: hidden;
-      padding-bottom: 80px;
-      -webkit-font-smoothing: antialiased;
-    }
-    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
-    a { color: inherit; text-decoration: none; }
-
-    /* ===== HEADER ===== */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(20, 22, 26, 0.9);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 12px 16px;
-      border-bottom: 1px solid #282933;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .header-logo {
-      font-weight: 700;
-      font-size: 20px;
-      background: linear-gradient(135deg, #2663F0, #00D4FF);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .header-search {
-      background: #282933;
-      border-radius: 12px;
-      padding: 8px 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #707480;
-      flex: 1;
-      max-width: 300px;
-    }
-    .header-search svg { width: 18px; height: 18px; fill: #707480; }
-    .header-right { display: flex; align-items: center; gap: 16px; }
-    .header-right button {
-      font-size: 14px;
-      font-weight: 500;
-      color: #A4A8B2;
-      transition: color 0.2s;
-    }
-    .header-right button:hover { color: #EBECF0; }
-    .header-theme {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #282933;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-
-    /* ===== BANNER ===== */
-    .banner {
-      margin: 12px 16px;
-      border-radius: 16px;
-      overflow: hidden;
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-      padding: 40px 20px;
-      text-align: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    }
-
-    /* ===== QUICK LINKS ===== */
-    .quick-links {
-      display: flex;
-      gap: 8px;
-      padding: 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-bottom: 16px;
-    }
-    .quick-links::-webkit-scrollbar { display: none; }
-    .quick-link {
-      flex-shrink: 0;
-      background: #282933;
-      padding: 6px 16px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #A4A8B2;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .quick-link img { width: 20px; height: 20px; border-radius: 4px; }
-
-    /* ===== CATEGORIES ===== */
-    .categories {
-      display: flex;
-      gap: 8px;
-      padding: 0 16px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #282933;
-    }
-    .categories::-webkit-scrollbar { display: none; }
-    .category {
-      flex-shrink: 0;
-      padding: 6px 14px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #A4A8B2;
-      white-space: nowrap;
-    }
-    .category.active {
-      color: #2663F0;
-      background: rgba(38, 99, 240, 0.12);
-    }
-
-    /* ===== TOP-UP SECTION ===== */
-    .topup {
-      background: #282933;
-      margin: 0 16px 16px;
-      border-radius: 16px;
       padding: 16px;
+      padding-bottom: 80px;
     }
-    .topup-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .topup-header h3 { font-size: 16px; }
-    .topup-header button { font-size: 13px; color: #2663F0; }
-    .topup-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .topup-field {
-      flex: 1;
-      min-width: 120px;
-      background: #1E1F26;
-      border-radius: 12px;
-      padding: 12px 14px;
-    }
-    .topup-field label {
-      font-size: 11px;
-      color: #707480;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .topup-field input {
-      background: transparent;
-      border: none;
-      color: #EBECF0;
-      font-size: 15px;
-      font-weight: 600;
-      width: 100%;
-      outline: none;
-    }
-    .topup-field input::placeholder { color: #707480; }
-    .topup-pay {
-      background: linear-gradient(135deg, #2663F0, #00D4FF);
-      color: #fff;
-      font-weight: 700;
-      padding: 14px 24px;
-      border-radius: 12px;
-      text-align: center;
-      flex: 1;
-      min-width: 140px;
-      font-size: 15px;
-    }
-
-    /* ===== PRODUCT GRID ===== */
-    .products {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      padding: 0 16px;
+      max-width: 600px;
+      margin: 0 auto;
     }
-    @media (min-width: 500px) {
-      .products { grid-template-columns: repeat(3, 1fr); }
-    }
-    .product-card {
+    .item {
       background: #1E1F26;
       border-radius: 12px;
-      overflow: hidden;
+      padding: 12px 8px;
+      text-align: center;
       border: 1px solid #282933;
-    }
-    .product-image {
-      aspect-ratio: 4/3;
-      background: #282933;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      position: relative;
-    }
-    .product-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 100px;
-      color: #fff;
-      background: #10A350;
-    }
-    .product-badge.red { background: #F0305D; }
-    .product-info { padding: 10px 12px 12px; }
-    .product-title {
-      font-size: 13px;
-      font-weight: 600;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.3;
-      margin-bottom: 4px;
-    }
-    .product-price {
-      font-size: 16px;
-      font-weight: 700;
-      color: #22BD65;
-      display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 6px;
-      flex-wrap: wrap;
     }
-    .product-price .old {
-      font-size: 12px;
-      font-weight: 400;
-      color: #707480;
-      text-decoration: line-through;
-    }
-    .product-price .discount {
-      font-size: 11px;
-      font-weight: 700;
-      color: #fff;
-      background: #F0305D;
-      padding: 0 6px;
-      border-radius: 4px;
-    }
-    .product-rating {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-      font-size: 12px;
-      color: #A4A8B2;
-    }
-    .product-rating .stars { color: #FFB800; }
-    .product-seller {
-      font-size: 11px;
-      color: #707480;
-      margin-top: 4px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* ===== SHOW MORE ===== */
-    .show-more {
-      display: block;
-      width: calc(100% - 32px);
-      margin: 20px auto 0;
-      padding: 14px;
-      border-radius: 12px;
-      background: #282933;
-      font-weight: 600;
-      font-size: 15px;
-      text-align: center;
-      color: #A4A8B2;
-    }
-
-    /* ===== FOOTER ===== */
-    .footer {
-      margin-top: 40px;
-      padding: 24px 16px 80px;
-      background: #282933;
-      border-top: 1px solid #404452;
-    }
-    .footer-section { margin-bottom: 20px; }
-    .footer-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #A4A8B2;
-    }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: #707480;
-    }
-    .footer-payments {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .footer-payments span {
-      background: #14161A;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    .footer-social {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .footer-social a {
+    .item svg {
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      background: #14161A;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #A4A8B2;
+      fill: #A4A8B2;
     }
-    .footer-copy {
-      font-size: 12px;
-      color: #707480;
-      margin-top: 16px;
-      text-align: center;
+    .item span {
+      font-size: 11px;
+      color: #A4A8B2;
+      white-space: nowrap;
+    }
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
-  <header class="header">
-    <div class="header-left">
-      <div class="header-logo">Playerok</div>
-      <div class="header-search">
-        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <span>Поиск игр</span>
-      </div>
-    </div>
-    <div class="header-right">
-      <button>Продать</button>
-      <button>Чаты</button>
-      <button>Профиль</button>
-      <button class="header-theme" id="themeToggle">🌙</button>
-    </div>
-  </header>
-
-  <!-- ===== BANNER ===== -->
-  <div class="banner">
-    🔥 Brawl Stars — Скидки до 50%
+<div class="grid">
+  <!-- 1. Standoff 2 -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 4C9.37258 4 4 9.37258 4 16C4 22.6274 9.37258 28 16 28C22.6274 28 28 22.6274 28 16C28 9.37258 22.6274 4 16 4ZM16 8L20 12L16 16L12 12L16 8ZM8 16L12 20L8 24L4 20L8 16ZM24 16L20 20L24 24L28 20L24 16ZM16 20L20 24L16 28L12 24L16 20Z" fill="#A4A8B2"/></svg>
+    <span>Standoff 2</span>
   </div>
 
-  <!-- ===== QUICK LINKS ===== -->
-  <div class="quick-links">
-    <button class="quick-link">🎮 Steam</button>
-    <button class="quick-link">💬 Telegram</button>
-    <button class="quick-link">🎮 PSN</button>
-    <button class="quick-link">📱 Roblox</button>
-    <button class="quick-link">🔫 PUBG</button>
+  <!-- 2. Roblox -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="4" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M10 10L22 10L22 22L10 22L10 10Z" fill="#A4A8B2"/><path d="M14 14L18 14L18 18L14 18L14 14Z" fill="#14161A"/></svg>
+    <span>Roblox</span>
   </div>
 
-  <!-- ===== CATEGORIES ===== -->
-  <div class="categories">
-    <button class="category active">🔥 Популярное</button>
-    <button class="category">🎁 Донат</button>
-    <button class="category">📦 Подписки</button>
-    <button class="category">👤 Аккаунты</button>
-    <button class="category">💎 Валюты</button>
-    <button class="category">🔑 Ключи</button>
+  <!-- 3. PUBG Mobile -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 6L22 12L16 18L10 12L16 6Z" fill="#A4A8B2"/><path d="M16 18L22 24L16 30L10 24L16 18Z" fill="#A4A8B2"/></svg>
+    <span>PUBG Mobile</span>
   </div>
 
-  <!-- ===== TOP-UP SECTION ===== -->
-  <div class="topup">
-    <div class="topup-header">
-      <h3>Пополнить Steam</h3>
-      <button>Ввести промокод</button>
-    </div>
-    <div class="topup-row">
-      <div class="topup-field">
-        <label>Логин Steam</label>
-        <input type="text" placeholder="Логин">
-      </div>
-      <div class="topup-field">
-        <label>Сумма</label>
-        <input type="text" value="1000 ₽">
-      </div>
-      <div class="topup-pay">Оплатить 1050 ₽</div>
-    </div>
+  <!-- 4. Brawl Stars -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 6C12 6 8 9 8 13C8 17 10 20 16 22C22 20 24 17 24 13C24 9 20 6 16 6Z" fill="#A4A8B2"/><circle cx="13" cy="13" r="2" fill="#14161A"/><circle cx="19" cy="13" r="2" fill="#14161A"/></svg>
+    <span>Brawl Stars</span>
   </div>
 
-  <!-- ===== PRODUCTS ===== -->
-  <div class="products" id="productGrid"></div>
+  <!-- 5. PlayStation -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M10 8L22 8L22 16L10 16L10 8Z" fill="#A4A8B2"/><path d="M10 20L22 20L22 24L10 24L10 20Z" fill="#A4A8B2"/></svg>
+    <span>PlayStation</span>
+  </div>
 
-  <button class="show-more" id="showMore">Показать еще</button>
+  <!-- 6. Telegram -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M10 16L16 22L22 16" stroke="#A4A8B2" stroke-width="2" fill="none"/><path d="M10 16L16 10L22 16" stroke="#A4A8B2" stroke-width="2" fill="none"/></svg>
+    <span>Telegram</span>
+  </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="footer-section">
-      <div class="footer-title">Способы оплаты</div>
-      <div class="footer-payments">
-        <span>💳</span>
-        <span>📱</span>
-        <span>🏦</span>
-        <span>💶</span>
-        <span>₿</span>
-      </div>
-    </div>
-    <div class="footer-section">
-      <div class="footer-title">Информация</div>
-      <div class="footer-links">
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
-        <a href="#">Условия</a>
-        <a href="#">Контакты</a>
-      </div>
-    </div>
-    <div class="footer-section">
-      <div class="footer-title">Соцсети</div>
-      <div class="footer-social">
-        <a href="#">📱</a>
-        <a href="#">📘</a>
-        <a href="#">🎬</a>
-        <a href="#">🎵</a>
-      </div>
-    </div>
-    <div class="footer-copy">2026 © Playerok — маркетплейс игровых товаров</div>
-  </footer>
+  <!-- 7. ChatGPT -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 6L22 16L16 26L10 16L16 6Z" fill="#A4A8B2"/><circle cx="16" cy="16" r="4" fill="#14161A"/></svg>
+    <span>ChatGPT</span>
+  </div>
 
-  <script>
-    // ============================================================
-    // ТОВАРЫ
-    // ============================================================
-    const products = [
-      { title: '1500 ROBUX | ЛУЧШАЯ ЦЕНА', price: 1299, oldPrice: 2499, discount: '-48%', rating: 5, reviews: 7176, seller: 'Playerok', image: '🎮' },
-      { title: 'СБОР ДИКОВИНОК 168 ШТ', price: 90, oldPrice: 200, discount: '-55%', rating: 5, reviews: 9, seller: 'GenshinPro', image: '🌺' },
-      { title: 'FL Studio Producer Edition 25', price: 249, oldPrice: 499, discount: '-50%', rating: 5, reviews: 3158, seller: 'AudioKey', image: '🎵' },
-      { title: '4000 + 400 Баксов по ID', price: 5299, oldPrice: 9999, discount: '-47%', rating: 5, reviews: 5688, seller: 'EchoPro', image: '🔮' },
-      { title: '10$ подарочная карта (США)', price: 879, oldPrice: 1190, discount: '-26%', rating: 5, reviews: 124, seller: 'Playerok', image: '🎁' },
-      { title: 'Pax Historia / Пополнение на 8$', price: 1290, oldPrice: 1499, discount: '-14%', rating: 5, reviews: 1357, seller: 'PaxShop', image: '📅' },
-    ];
+  <!-- 8. Claude -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M12 10L20 10L20 22L12 22L12 10Z" fill="#A4A8B2"/><path d="M14 12L18 12L18 14L14 14L14 12Z" fill="#14161A"/><path d="M14 18L18 18L18 20L14 20L14 18Z" fill="#14161A"/></svg>
+    <span>Claude</span>
+  </div>
 
-    const grid = document.getElementById('productGrid');
-    products.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      const stars = '⭐'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
-      card.innerHTML = `
-        <div class="product-image">
-          <span>${p.image}</span>
-          <span class="product-badge ${p.discount && (p.discount.includes('55') || p.discount.includes('50')) ? 'red' : ''}">${p.discount || ''}</span>
-        </div>
-        <div class="product-info">
-          <div class="product-title">${p.title}</div>
-          <div class="product-price">
-            ${p.price} ₽
-            ${p.oldPrice ? `<span class="old">${p.oldPrice} ₽</span>` : ''}
-          </div>
-          <div class="product-rating">
-            <span class="stars">${stars}</span>
-            <span>${p.reviews.toLocaleString()}</span>
-          </div>
-          <div class="product-seller">${p.seller}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
+  <!-- 9. App Store -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="6" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M10 12L16 22L22 12" stroke="#A4A8B2" stroke-width="2" fill="none"/><path d="M12 8L20 8" stroke="#A4A8B2" stroke-width="2"/></svg>
+    <span>App Store</span>
+  </div>
 
-    // ============================================================
-    // ТЕМА
-    // ============================================================
-    document.getElementById('themeToggle').addEventListener('click', function() {
-      document.documentElement.classList.toggle('light');
-      this.textContent = document.documentElement.classList.contains('light') ? '☀️' : '🌙';
-    });
+  <!-- 10. Clash of Clans -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 6L20 12L16 18L12 12L16 6Z" fill="#A4A8B2"/><path d="M12 18L16 24L20 18" stroke="#A4A8B2" stroke-width="2" fill="none"/></svg>
+    <span>Clash of Clans</span>
+  </div>
 
-    // ============================================================
-    // ПОКАЗАТЬ ЕЩЕ
-    // ============================================================
-    document.getElementById('showMore').addEventListener('click', function() {
-      alert('Демо-режим: больше товаров не загружено');
-    });
-  </script>
+  <!-- 11. TikTok -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M12 8L20 8" stroke="#A4A8B2" stroke-width="2"/><path d="M12 14L20 14" stroke="#A4A8B2" stroke-width="2"/><path d="M12 20L20 20" stroke="#A4A8B2" stroke-width="2"/></svg>
+    <span>TikTok</span>
+  </div>
+
+  <!-- 12. Mobile Legends -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M12 10L20 16L12 22" stroke="#A4A8B2" stroke-width="2" fill="none"/></svg>
+    <span>Mobile Legends</span>
+  </div>
+
+  <!-- 13. Genshin Impact -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 6L18 12L24 12L20 16L22 22L16 18L10 22L12 16L8 12L14 12L16 6Z" fill="#A4A8B2"/></svg>
+    <span>Genshin Impact</span>
+  </div>
+
+  <!-- 14. Steam -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M12 10L16 14L12 18L8 14L12 10Z" fill="#A4A8B2"/><path d="M20 10L24 14L20 18L16 14L20 10Z" fill="#A4A8B2"/></svg>
+    <span>Steam</span>
+  </div>
+
+  <!-- 15. Minecraft -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="2" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M10 10L22 10L22 22L10 22L10 10Z" fill="#A4A8B2"/></svg>
+    <span>Minecraft</span>
+  </div>
+
+  <!-- 16. Clash Royale -->
+  <div class="item">
+    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="#A4A8B2" stroke-width="2"/><path d="M16 6L22 16L16 26L10 16L16 6Z" fill="#A4A8B2"/></svg>
+    <span>Clash Royale</span>
+  </div>
+</div>
 
 </body>
 </html>
