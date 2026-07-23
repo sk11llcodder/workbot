@@ -2,365 +2,389 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой проект</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Playerok WebApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* ==================== ПЕРЕМЕННЫЕ И ОСНОВНЫЕ СТИЛИ ==================== */
         :root {
-            --bg-color: #0f1319;
-            --card-bg: #181f29;
-            --card-border: #232c39;
+            --bg-main: #0b0e14;
+            --card-bg: #161c24;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-blue: #2563eb;
+            --accent-blue-hover: #1d4ed8;
             --accent-green: #10b981;
-            --accent-green-hover: #059669;
-            --text-white: #ffffff;
-            --text-muted: #8e9bae;
-            --text-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --text-main: #ffffff;
+            --text2: #94a3b8;
+            --text3: #64748b;
+            --tabbar-bg: rgba(22, 28, 36, 0.85);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #05070a;
-            color: var(--text-white);
+            background-color: var(--bg-main);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .app-container {
+        /* ==================== ФОНОВЫЕ ЭФФЕКТЫ (COSMOS / AMBIENT) ==================== */
+        .app-fx, .app-ambient {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 420px;
-            background-color: var(--bg-color);
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app-ambient__orb--a {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(50px);
+        }
+
+        /* ==================== ОСНОВНОЙ КОНТЕЙНЕР ==================== */
+        #main {
+            width: 100%;
+            max-width: 440px;
             padding: 16px;
+            padding-top: 60px;
             padding-bottom: 90px;
             position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 1;
         }
 
         /* Шапка */
-        .header {
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 54px;
+            background: rgba(11, 14, 20, 0.8);
+            backdrop-filter: blur(12px);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding-bottom: 12px;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+            border-bottom: 1px solid var(--card-border);
         }
 
-        .header-title {
-            font-size: 22px;
+        .app-logo-word {
+            font-size: 18px;
             font-weight: 700;
+            color: #fff;
         }
 
-        .bell-btn {
+        .btn-notif {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            color: var(--text-white);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 16px;
+        }
+
+        .btn-notif svg {
+            width: 18px;
+            height: 18px;
         }
 
         /* Подзаголовок */
-        .subtitle-container {
-            text-align: center;
+        .home-tagline {
             font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
+            color: var(--text2);
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.4;
         }
 
-        .highlight {
-            color: var(--text-blue);
-            font-weight: 600;
+        .home-tagline__accent {
+            color: #60a5fa;
+            font-weight: 500;
         }
 
-        /* Общие стили карточек */
-        .card {
-            background-color: var(--card-bg);
+        /* Карточки iOS */
+        .ios-card {
+            background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 18px;
+            border-radius: 16px;
             padding: 16px;
             margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
-        /* Профиль */
-        .profile-header {
+        .ios-row {
             display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            margin-bottom: 16px;
+            gap: 12px;
         }
 
         .avatar img {
-            width: 56px;
-            height: 56px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        .username {
-            font-size: 18px;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
-        .user-handle {
-            display: block;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 2px;
-            margin-bottom: 8px;
-        }
-
-        .balance-badge {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--accent-green);
+        .home-profile-balance {
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.25);
             padding: 4px 10px;
-            border-radius: 10px;
+            border-radius: 8px;
+        }
+
+        .home-profile-balance__label {
             font-size: 11px;
+            color: var(--accent-green);
             font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .balance-amount {
-            color: #fff;
+        .home-profile-balance__value {
             font-size: 13px;
-            margin-left: 4px;
+            font-weight: 700;
+            color: #fff;
         }
 
-        .verification-box {
-            text-align: center;
-        }
-
-        .verification-label {
+        .verify-chip {
             display: block;
             font-size: 12px;
-            color: var(--text-muted);
-            background: rgba(255,255,255,0.03);
+            color: var(--text2);
+            background: rgba(255, 255, 255, 0.04);
             padding: 6px;
             border-radius: 8px;
-            margin-bottom: 8px;
+            text-align: center;
+            margin-top: 10px;
         }
 
         /* Кнопки */
-        .btn {
+        .btn-ios {
             border: none;
             border-radius: 12px;
-            padding: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .btn-primary {
+        .btn-blue {
+            background-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        .btn-green {
             background-color: var(--accent-green);
             color: #000;
             font-weight: 700;
         }
 
-        .btn-full {
-            width: 100%;
-        }
-
-        /* История платежей */
-        .payment-history {
-            width: 100%;
-            text-align: center;
-            color: var(--text-white);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        /* Сетка кнопок */
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .btn-action {
-            color: var(--text-white);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        /* Код сделки */
-        .card-caption {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            font-weight: 700;
-        }
-
-        .deal-description {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin: 8px 0 12px 0;
-            line-height: 1.4;
-        }
-
-        .deal-input-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .deal-input {
-            flex: 1;
-            background: rgba(0,0,0,0.2);
+        .btn-gray {
+            background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 10px;
+            color: var(--text-main);
+        }
+
+        .btn-red {
+            background-color: var(--accent-red);
             color: #fff;
         }
 
-        /* Навигация */
-        .bottom-nav {
+        /* Сетки (Grid) */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Инпуты */
+        .ios-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .ios-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* Тексты подсказок */
+        .hint-text {
+            font-size: 12px;
+            color: var(--text2);
+            line-height: 1.4;
+        }
+
+        .home-note {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 14px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Таббар (Нижнее меню) */
+        .tabbar {
             position: fixed;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 420px;
-            background-color: rgba(24, 31, 41, 0.95);
-            backdrop-filter: blur(10px);
+            max-width: 440px;
+            height: 64px;
+            background: var(--tabbar-bg);
+            backdrop-filter: blur(16px);
             border-top: 1px solid var(--card-border);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
+            align-items: center;
+            z-index: 100;
+            padding-bottom: 8px;
         }
 
-        .nav-item {
+        .tab {
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: var(--text3);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
             font-size: 10px;
+            font-weight: 500;
             cursor: pointer;
             flex: 1;
         }
 
-        .nav-item.active {
-            color: var(--text-white);
+        .tab.on {
+            color: #fff;
         }
 
-        .nav-item i {
-            font-size: 18px;
+        .tab svg {
+            width: 20px;
+            height: 20px;
         }
 
-        .create-btn-wrapper {
+        .tab-create {
             position: relative;
-            top: -15px;
-        }
-
-        .create-btn {
-            width: 44px;
-            height: 44px;
-            background-color: var(--accent-green);
+            top: -12px;
+            background: var(--accent-green);
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        .tab-create__plus {
+            font-size: 24px;
             color: #000;
-            font-size: 20px;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        /* Вспомогательные классы управления панелями */
+        .panel {
+            display: none;
+        }
+
+        .panel.on {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Всплывающие шторки (Sheets) */
+        .sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .sheet-overlay.active {
+            display: flex;
+        }
+
+        .sheet {
+            background: var(--card-bg);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .sheet .grab {
+            width: 36px;
+            height: 4px;
+            background: var(--card-border);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .sheet-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
-<body>
+<body class="ui-ready">
 
-    <div class="app-container">
-        <header class="header">
-            <h1 class="header-title">Мой проект</h1>
-            <button class="bell-btn" aria-label="Уведомления">
-                <i class="fa-regular fa-bell"></i>
-            </button>
-        </header>
-
-        <div class="subtitle-container">
-            <p>Маркетплейс игровых товаров и услуг · <span class="highlight">безопасная сделка</span> в Telegram</p>
-        </div>
-
-        <main class="content">
-            <section class="card profile-card">
-                <div class="profile-header">
-                    <div class="avatar">
-                        <img src="https://via.placeholder.com/60" alt="Аватар">
-                    </div>
-                    <div class="user-info">
-                        <h2 class="username">Vladislav Sk11lovsky</h2>
-                        <span class="user-handle">@mvdsk11ll</span>
-                        <div class="balance-badge">
-                            БАЛАНС <span class="balance-amount">0,00 ₽</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="verification-box">
-                    <span class="verification-label">Верификация в боте</span>
-                    <button class="btn btn-primary btn-full">Верифицировать</button>
-                </div>
-            </section>
-
-            <button class="card btn-card payment-history">
-                <span>·</span> История платежей <span>·</span>
-            </button>
-
-            <div class="action-grid">
-                <button class="card btn-action">Пополнить баланс</button>
-                <button class="card btn-action">Вывести деньги</button>
-            </div>
-
-            <section class="card deal-card">
-                <span class="card-caption">КОД СДЕЛКИ</span>
-                <p class="deal-description">
-                    Продавец прислал код — введите его, чтобы открыть сделку и оплатить.
-                </p>
-                <div class="deal-input-group">
-                    <input type="text" placeholder="Введите код..." class="deal-input">
-                    <button class="btn btn-primary">Открыть</button>
-                </div>
-            </section>
-        </main>
-
-        <nav class="bottom-nav">
-            <button class="nav-item active">
-                <i class="fa-solid fa-user"></i>
-                <span>Профиль</span>
-            </button>
-            <button class="nav-item">
-                <i class="fa-regular fa-comment"></i>
-                <span>Чаты</span>
-            </button>
-            <button class="nav-item create-btn-wrapper">
-                <div class="create-btn">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-                <span>Создать</span>
-            </button>
-            <button class="nav-item">
-                <i class="fa-regular fa-wallet"></i>
-                <span>Кошелёк</span>
-            </button>
-            <button class="nav-item">
-                <i class="fa-regular fa-circle-question"></i>
-                <span>Помощь</span>
-            </button>
-        </nav>
-    </div>
-
-</body>
+    </body>
 </html>
