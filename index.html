@@ -326,7 +326,7 @@
             line-height: 1;
         }
 
-        /* Вспомогательные классы управления панелями */
+        /* Панели */
         .panel {
             display: none;
         }
@@ -339,7 +339,7 @@
             display: none !important;
         }
 
-        /* Всплывающие шторки (Sheets) */
+        /* Шторки */
         .sheet-overlay {
             position: fixed;
             top: 0;
@@ -385,6 +385,96 @@
     </style>
 </head>
 <body class="ui-ready">
+  <div class="app-fx" aria-hidden="true">
+    <div class="app-fx__vignette"></div>
+    <div class="app-fx__liquid"></div>
+    <div class="app-fx__grain"></div>
+  </div>
+  <div class="app-ambient" aria-hidden="true">
+    <div class="cosmos-deep"></div>
+    <div class="cosmos-stars cosmos-stars--far"></div>
+    <div class="cosmos-stars cosmos-stars--mid"></div>
+    <div class="cosmos-stars cosmos-stars--near"></div>
+    <div class="cosmos-aurora"></div>
+    <div class="cosmos-horizon"></div>
+    <div class="app-ambient__mesh"></div>
+    <div class="app-ambient__orb app-ambient__orb--a"></div>
+    <div class="app-ambient__orb app-ambient__orb--b"></div>
+    <div class="app-ambient__orb app-ambient__orb--c"></div>
+    <div class="app-ambient__orb app-ambient__orb--d"></div>
+  </div>
 
-    </body>
+  <header class="top-header" id="top-header">
+    <div class="top-bar-left">
+      <div class="app-logo-link" aria-label="Playerok">
+        <span class="app-logo-word">Мой проект</span>
+      </div>
+    </div>
+    <div class="top-bar-right">
+      <button type="button" class="btn-notif" id="btn-header-notif" aria-label="Уведомления" title="Уведомления">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span class="btn-notif-badge hidden" id="header-notif-badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <div id="main">
+    <div id="p-home" class="panel on">
+      <p class="home-tagline">Маркетплейс игровых товаров и услуг · <span class="home-tagline__accent">безопасная сделка</span> в Telegram</p>
+      <div class="ios-card home-hero">
+        <div class="ios-row" style="align-items:center;">
+          <div class="avatar" id="av1"><img src="https://t.me/i/userpic/320/YZWTtyKpi5vLE6U6482x5MzA20JrmBEhjjNuN1-Yj6wpVszJdecdnCSpfMbfJtqd.svg" alt=""></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:20px;font-weight:600;" id="nm1">𝗩𝗹𝗮𝗱𝗶𝘀𝗹𝗮𝘃 𝗦𝗸𝟏𝟏𝗹𝗹𝗼𝘃𝘀𝗸𝘆</div>
+            <div style="font-size:15px;color:var(--text2);" id="un1">@mvdsk11ll</div>
+            <div class="home-profile-balance">
+              <span class="home-profile-balance__label">Баланс</span>
+              <span class="home-profile-balance__value" id="bal">0,00 ₽</span>
+            </div>
+            <div id="home-verify" class="home-verify-slot"><span class="verify-chip verify-chip--pending">Верификация в боте</span><button type="button" class="btn-ios btn-green js-open-verify" style="margin-top:10px;width:100%;">Верифицировать</button></div>
+          </div>
+        </div>
+      </div>
+      
+      <button type="button" class="btn-ios btn-gray" id="b-history" style="margin-top:12px;width:100%;">История платежей</button>
+      <div class="grid-2">
+        <button type="button" class="btn-ios btn-gray" id="b-top">Пополнить баланс</button>
+        <button type="button" class="btn-ios btn-gray" id="b-out">Вывести деньги</button>
+      </div>
+
+      <div class="ios-card profile-card home-code-card" style="margin-top:12px;">
+        <div class="profile-card-head" style="margin-bottom:8px;font-weight:700;">КОД СДЕЛКИ</div>
+        <p class="hint-text" style="margin:0 0 10px;">Продавец прислал код — введите его, чтобы открыть сделку и оплатить.</p>
+        <div class="grid-2" style="gap:8px;">
+          <input type="text" class="ios-input" id="deal-code-inp" placeholder="Код 6 символов" autocomplete="off" style="margin:0;text-transform:uppercase;" maxlength="12">
+          <button type="button" class="btn-ios btn-green" id="deal-code-go" style="margin:0;">Открыть</button>
+        </div>
+      </div>
+      
+      <div class="home-note">Совет: ник контрагента вводите без символа @. Приглашения принимайте во вкладке «Сделки» → «Приглашения».</div>
+    </div>
+  </div>
+
+  <nav class="tabbar" id="tabs">
+    <button type="button" class="tab on" data-t="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M6 20v-1a6 6 0 0 1 12 0v1"></path></svg>
+      Профиль
+    </button>
+    <button type="button" class="tab" data-t="support">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      Чаты
+    </button>
+    <button type="button" class="tab-create" id="tab-create" aria-label="Создать сделку">
+      <span class="tab-create__plus">+</span>
+    </button>
+    <button type="button" class="tab tab-action" data-action="wallet">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="12.5" rx="2.5"></rect><path d="M15.5 13h4"></path><path d="M17.5 10.5v5"></path></svg>
+      Кошелёк
+    </button>
+    <button type="button" class="tab tab-action" data-action="help" id="tab-support">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18h.01"></path><path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2-3 4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+      Помощь
+    </button>
+  </nav>
+</body>
 </html>
