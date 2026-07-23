@@ -3,198 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пример Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Мой проект</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --app-bg-color: #12141a; /* Глубокий темный фон */
-            --app-card-bg: #1a1e26;  /* Цвет карточек */
-            --app-accent-color: #03dac6; /* Основной акцентный цвет */
-            --app-text-main: #e0e0e0; /* Основной цвет текста */
-            --app-text-secondary: #a0a0a0; /* Второстепенный текст */
-            --app-button-bg: #2d3340; /* Фон кнопок */
-            --app-button-hover: #3d4554;
+            --bg-color: #0f1319;
+            --card-bg: #181f29;
+            --card-border: #232c39;
+            --accent-green: #10b981;
+            --accent-green-hover: #059669;
+            --text-white: #ffffff;
+            --text-muted: #8e9bae;
+            --text-blue: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: var(--app-bg-color);
-            color: var(--app-text-main);
-            margin: 0;
-            padding: 16px;
+            background-color: #05070a;
+            color: var(--text-white);
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        .main-container {
+        .app-container {
             width: 100%;
-            max-width: 420px; /* Ограничение ширины для мобильных */
+            max-width: 420px;
+            background-color: var(--bg-color);
+            padding: 16px;
+            padding-bottom: 90px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
-        /* Блок заголовка */
-        .app-header {
+        /* Шапка */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            padding-bottom: 12px;
         }
 
         .header-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
         }
 
-        /* Общие стили для карточек */
-        .card {
-            background-color: var(--app-card-bg);
+        .bell-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-white);
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 16px;
         }
 
-        /* Блок информации о пользователе и балансе */
-        .account-card {
+        /* Подзаголовок */
+        .subtitle-container {
             text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
         }
 
-        .profile-section {
+        .highlight {
+            color: var(--text-blue);
+            font-weight: 600;
+        }
+
+        /* Общие стили карточек */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        /* Профиль */
+        .profile-header {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            gap: 14px;
+            align-items: flex-start;
             margin-bottom: 16px;
         }
 
-        .avatar-circle {
-            width: 64px;
-            height: 64px;
+        .avatar img {
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background-color: #334155;
-            margin-bottom: 8px;
+            object-fit: cover;
         }
 
         .username {
-            font-size: 14px;
-            color: var(--app-text-secondary);
-            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.2;
         }
 
-        .balance-section {
-            margin-bottom: 16px;
+        .user-handle {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            margin-bottom: 8px;
         }
 
-        .balance-label {
-            font-size: 14px;
-            color: var(--app-text-secondary);
-            text-transform: uppercase;
-            margin-bottom: 4px;
+        .balance-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
         }
 
-        .balance-value {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 0;
+        .balance-amount {
+            color: #fff;
+            font-size: 13px;
+            margin-left: 4px;
         }
 
-        /* Стили кнопок */
-        .action-button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+        .verification-box {
             text-align: center;
         }
 
+        .verification-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.03);
+            padding: 6px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Кнопки */
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
         .btn-primary {
-            background-color: var(--app-accent-color);
-            color: #121212; /* Темный текст на светлом фоне */
+            background-color: var(--accent-green);
+            color: #000;
+            font-weight: 700;
         }
 
-        .btn-primary:active {
-            opacity: 0.9;
+        .btn-full {
+            width: 100%;
         }
 
-        .btn-secondary {
-            background-color: var(--app-button-bg);
-            color: var(--app-text-main);
+        /* История платежей */
+        .payment-history {
+            width: 100%;
+            text-align: center;
+            color: var(--text-white);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
         }
 
-        .btn-secondary:hover {
-            background-color: var(--app-button-hover);
-        }
-
-        /* Блок действий с балансом */
-        .balance-actions {
+        /* Сетка кнопок */
+        .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 10px;
         }
 
-        /* Блок ввода кода сделки */
-        .deal-code-card {
+        .btn-action {
+            color: var(--text-white);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Код сделки */
+        .card-caption {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .deal-description {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 8px 0 12px 0;
+            line-height: 1.4;
+        }
+
+        .deal-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .deal-input {
+            flex: 1;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 10px;
+            color: #fff;
+        }
+
+        /* Навигация */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            background-color: rgba(24, 31, 41, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            cursor: pointer;
+            flex: 1;
         }
 
-        .input-code {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background-color: #2d3340; /* Чуть светлее фона карточки */
-            color: var(--app-text-main);
-            font-size: 16px;
-            box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
+        .nav-item.active {
+            color: var(--text-white);
         }
 
-        .input-code::placeholder {
-            color: #555555;
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .create-btn-wrapper {
+            position: relative;
+            top: -15px;
+        }
+
+        .create-btn {
+            width: 44px;
+            height: 44px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="app-header">
-            <h1 class="header-title">Сервис Сделок</h1>
+
+    <div class="app-container">
+        <header class="header">
+            <h1 class="header-title">Мой проект</h1>
+            <button class="bell-btn" aria-label="Уведомления">
+                <i class="fa-regular fa-bell"></i>
+            </button>
+        </header>
+
+        <div class="subtitle-container">
+            <p>Маркетплейс игровых товаров и услуг · <span class="highlight">безопасная сделка</span> в Telegram</p>
         </div>
 
-        <div class="card account-card">
-            <div class="profile-section">
-                <div class="avatar-circle"></div> <p class="username">@testuser</p>
+        <main class="content">
+            <section class="card profile-card">
+                <div class="profile-header">
+                    <div class="avatar">
+                        <img src="https://via.placeholder.com/60" alt="Аватар">
+                    </div>
+                    <div class="user-info">
+                        <h2 class="username">Vladislav Sk11lovsky</h2>
+                        <span class="user-handle">@mvdsk11ll</span>
+                        <div class="balance-badge">
+                            БАЛАНС <span class="balance-amount">0,00 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verification-box">
+                    <span class="verification-label">Верификация в боте</span>
+                    <button class="btn btn-primary btn-full">Верифицировать</button>
+                </div>
+            </section>
+
+            <button class="card btn-card payment-history">
+                <span>·</span> История платежей <span>·</span>
+            </button>
+
+            <div class="action-grid">
+                <button class="card btn-action">Пополнить баланс</button>
+                <button class="card btn-action">Вывести деньги</button>
             </div>
-            
-            <div class="balance-section">
-                <p class="balance-label">Доступно</p>
-                <h2 class="balance-value">0,00 ₽</h2>
-            </div>
-            
-            <button class="action-button btn-primary">Пополнить</button>
-        </div>
 
-        <div class="balance-actions">
-            <button class="action-button btn-secondary">История</button>
-            <button class="action-button btn-secondary">Вывести</button>
-        </div>
+            <section class="card deal-card">
+                <span class="card-caption">КОД СДЕЛКИ</span>
+                <p class="deal-description">
+                    Продавец прислал код — введите его, чтобы открыть сделку и оплатить.
+                </p>
+                <div class="deal-input-group">
+                    <input type="text" placeholder="Введите код..." class="deal-input">
+                    <button class="btn btn-primary">Открыть</button>
+                </div>
+            </section>
+        </main>
 
-        <div class="card deal-code-card">
-            <p style="margin: 0; color: var(--app-text-secondary); font-size: 14px;">Введите код сделки</p>
-            <input type="text" class="input-code" placeholder="КОД ИЗ 6 СИМВОЛОВ">
-            <button class="action-button btn-primary">Продолжить</button>
-        </div>
+        <nav class="bottom-nav">
+            <button class="nav-item active">
+                <i class="fa-solid fa-user"></i>
+                <span>Профиль</span>
+            </button>
+            <button class="nav-item">
+                <i class="fa-regular fa-comment"></i>
+                <span>Чаты</span>
+            </button>
+            <button class="nav-item create-btn-wrapper">
+                <div class="create-btn">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <span>Создать</span>
+            </button>
+            <button class="nav-item">
+                <i class="fa-regular fa-wallet"></i>
+                <span>Кошелёк</span>
+            </button>
+            <button class="nav-item">
+                <i class="fa-regular fa-circle-question"></i>
+                <span>Помощь</span>
+            </button>
+        </nav>
     </div>
 
-    <script>
-        // Инициализация Telegram Mini App
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-    </script>
 </body>
 </html>
